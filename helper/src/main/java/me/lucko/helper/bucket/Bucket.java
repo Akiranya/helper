@@ -57,7 +57,7 @@ public interface Bucket<E> extends Set<E> {
      * @param i the partition index
      * @return the partition
      * @throws IndexOutOfBoundsException if the index is out of range
-     *         (<tt>index &lt; 0 || index &gt;= getPartitionCount()</tt>)
+     *         (<code>index &lt; 0 || index &gt;= getPartitionCount()</code>)
      */
     @Nonnull
     BucketPartition<E> getPartition(int i);
