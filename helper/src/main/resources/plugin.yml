@@ -5,5 +5,12 @@ description: ${project.description}
 main: me.lucko.helper.internal.StandalonePlugin
 website: https://github.com/lucko/helper
 load: STARTUP
+loadbefore:
+  - helper-js
+  - helper-lilypad
+  - helper-mongo
+  - helper-profiles
+  - helper-redis
+  - helper-sql
 softdepend: [ProtocolLib, Citizens, ViaVersion]
 api-version: 1.13
