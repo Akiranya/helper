@@ -59,13 +59,17 @@
     </properties>
 
     <distributionManagement>
-        <snapshotRepository>
+        <!--<snapshotRepository>
             <id>luck-snapshots</id>
             <url>https://nexus.lucko.me/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>luck-releases</id>
             <url>https://nexus.lucko.me/repository/maven-releases/</url>
+        </repository>-->
+        <repository>
+            <id>mew-releases</id>
+            <url>file://${user.home}/MewcraftRepository</url>
         </repository>
     </distributionManagement>
 
