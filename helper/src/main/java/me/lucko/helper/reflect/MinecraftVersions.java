@@ -41,6 +41,7 @@ public final class MinecraftVersions {
      * Version 1.20 - the trails and tales update
      */
     public static final MinecraftVersion v1_20 = MinecraftVersion.parse("1.20");
+
     /**
      * Version 1.19 - the wild update
      */
@@ -50,7 +51,7 @@ public final class MinecraftVersions {
      * Version 1.18 - caves and cliffs part 2
      */
     public static final MinecraftVersion v1_18 = MinecraftVersion.parse("1.18");
-    
+
     /**
      * Version 1.17 - caves and cliffs part 1
      */
