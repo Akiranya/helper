@@ -7,9 +7,9 @@
     <groupId>me.lucko</groupId>
     <artifactId>helper-parent</artifactId>
     <version>5.0.0</version>
-    
+
     <modules>
-    	<module>helper</module>
+        <module>helper</module>
         <module>helper-sql</module>
         <module>helper-redis</module>
         <module>helper-mongo</module>
@@ -55,18 +55,10 @@
         <source.version>3.3.0</source.version>
         <javadoc.version>3.5.0</javadoc.version>
 
-        <bukkit.version>1.12.2-R0.1-SNAPSHOT</bukkit.version>
+        <bukkit.version>1.20.1-R0.1-SNAPSHOT</bukkit.version>
     </properties>
 
     <distributionManagement>
-        <!--<snapshotRepository>
-            <id>luck-snapshots</id>
-            <url>https://nexus.lucko.me/repository/maven-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>luck-releases</id>
-            <url>https://nexus.lucko.me/repository/maven-releases/</url>
-        </repository>-->
         <repository>
             <id>mew-releases</id>
             <url>file://${user.home}/MewcraftRepository</url>
@@ -122,8 +114,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
             <version>${bukkit.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -135,8 +127,8 @@
             <url>https://repo.lucko.me/</url>
         </repository>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>paper-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 
