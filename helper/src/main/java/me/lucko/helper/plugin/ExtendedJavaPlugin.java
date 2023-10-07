@@ -34,14 +34,13 @@ import me.lucko.helper.scheduler.HelperExecutors;
 import me.lucko.helper.terminable.composite.CompositeTerminable;
 import me.lucko.helper.terminable.module.TerminableModule;
 import me.lucko.helper.utils.CommandMapUtil;
-
+import me.lucko.helper.utils.ResourceExtractor;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import ninja.leaping.configurate.ConfigurationNode;
 
 import java.io.File;
 import java.util.Objects;
@@ -211,6 +210,20 @@ public class ExtendedJavaPlugin extends JavaPlugin implements HelperPlugin {
         File f = getRelativeFile(file);
         ConfigFactory.yaml().load(f, configObject);
         return configObject;
+    }
+
+    @Override
+    public void saveResourceRecursively(@Nonnull final String name) {
+        saveResourceRecursively(name, false);
+    }
+
+    @Override
+    public void saveResourceRecursively(@Nonnull final String name, final boolean overwrite) {
+        Objects.requireNonNull(name, "name");
+        File targetFile = new File(getDataFolder(), name);
+        if (overwrite || !targetFile.exists()) {
+            ResourceExtractor.copyResourceRecursively(getClassLoader().getResource(name), targetFile);
+        }
     }
 
     @Nonnull

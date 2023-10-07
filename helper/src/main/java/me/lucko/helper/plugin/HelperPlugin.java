@@ -163,6 +163,7 @@ public interface HelperPlugin extends Plugin, TerminableConsumer {
      * @param file the name of the file
      * @return the config instance
      */
+    @Deprecated
     @Nonnull
     ConfigurationNode loadConfigNode(@Nonnull String file);
 
@@ -173,8 +174,23 @@ public interface HelperPlugin extends Plugin, TerminableConsumer {
      * @param configObject the config object
      * @param <T> the config object type
      */
+    @Deprecated
     @Nonnull
     <T> T setupConfig(@Nonnull String file, @Nonnull T configObject);
+
+    /**
+     * Saves a bundled file from the plugins resource folder.
+     *
+     * @param name the name of the file
+     */
+    void saveResourceRecursively(@Nonnull String name);
+
+    /**
+     * Saves a bundled file from the plugins resource folder, optionally overwriting any existing file.
+     *
+     * @param name the name of the file
+     */
+    void saveResourceRecursively(@Nonnull String name, boolean overwrite);
 
     /**
      * Gets the plugin's class loader
