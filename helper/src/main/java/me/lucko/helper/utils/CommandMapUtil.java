@@ -32,13 +32,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.SimplePluginManager;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -50,8 +47,6 @@ import javax.annotation.Nonnull;
 public final class CommandMapUtil {
 
     private static final Constructor<PluginCommand> COMMAND_CONSTRUCTOR;
-    private static final Field COMMAND_MAP_FIELD;
-    private static final Field KNOWN_COMMANDS_FIELD;
 
     static {
         Constructor<PluginCommand> commandConstructor;
@@ -62,50 +57,23 @@ public final class CommandMapUtil {
             throw new RuntimeException(e);
         }
         COMMAND_CONSTRUCTOR = commandConstructor;
-
-        Field commandMapField;
-        try {
-            commandMapField = SimplePluginManager.class.getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        COMMAND_MAP_FIELD = commandMapField;
-
-        Field knownCommandsField;
-        try {
-            knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
-            knownCommandsField.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        KNOWN_COMMANDS_FIELD = knownCommandsField;
     }
 
     private static CommandMap getCommandMap() {
-        try {
-            return (CommandMap) COMMAND_MAP_FIELD.get(Bukkit.getServer().getPluginManager());
-        } catch (Exception e) {
-            throw new RuntimeException("Could not get CommandMap", e);
-        }
+        return Bukkit.getCommandMap(); // Compatible with Paper 1.9.1+
     }
 
     private static Map<String, Command> getKnownCommandMap() {
-        try {
-            //noinspection unchecked
-            return (Map<String, Command>) KNOWN_COMMANDS_FIELD.get(getCommandMap());
-        } catch (Exception e) {
-            throw new RuntimeException("Could not get known commands map", e);
-        }
+        return Bukkit.getCommandMap().getKnownCommands(); // Compatible with Paper 1.9.1+
     }
 
     /**
      * Registers a CommandExecutor with the server
      *
-     * @param plugin the plugin instance
+     * @param plugin  the plugin instance
      * @param command the command instance
      * @param aliases the command aliases
-     * @param <T> the command executor class type
+     * @param <T>     the command executor class type
      * @return the command executor
      */
     @Nonnull
@@ -116,13 +84,13 @@ public final class CommandMapUtil {
     /**
      * Registers a CommandExecutor with the server
      *
-     * @param plugin the plugin instance
-     * @param command the command instance
-     * @param permission the command permission
+     * @param plugin            the plugin instance
+     * @param command           the command instance
+     * @param permission        the command permission
      * @param permissionMessage the message sent when the sender doesn't the required permission
-     * @param description the command description
-     * @param aliases the command aliases
-     * @param <T> the command executor class type
+     * @param description       the command description
+     * @param aliases           the command aliases
+     * @param <T>               the command executor class type
      * @return the command executor
      */
     @Nonnull
@@ -137,10 +105,10 @@ public final class CommandMapUtil {
                 getKnownCommandMap().put(alias.toLowerCase(), cmd);
                 cmd.setLabel(alias.toLowerCase());
                 if (permission != null) {
-                   cmd.setPermission(permission);
-                   if (permissionMessage != null) {
-                       cmd.setPermissionMessage(permissionMessage);
-                   }
+                    cmd.setPermission(permission);
+                    if (permissionMessage != null) {
+                        cmd.setPermissionMessage(permissionMessage);
+                    }
                 }
                 if (description != null) {
                     cmd.setDescription(description);
@@ -161,17 +129,14 @@ public final class CommandMapUtil {
      * Unregisters a CommandExecutor with the server
      *
      * @param command the command instance
-     * @param <T> the command executor class type
+     * @param <T>     the command executor class type
      * @return the command executor
      */
     @Nonnull
     public static <T extends CommandExecutor> T unregisterCommand(@Nonnull T command) {
         CommandMap map = getCommandMap();
         try {
-            //noinspection unchecked
-            Map<String, Command> knownCommands = (Map<String, Command>) KNOWN_COMMANDS_FIELD.get(map);
-
-            Iterator<Command> iterator = knownCommands.values().iterator();
+            Iterator<Command> iterator = getKnownCommandMap().values().iterator();
             while (iterator.hasNext()) {
                 Command cmd = iterator.next();
                 if (cmd instanceof PluginCommand) {
