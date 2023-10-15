@@ -221,6 +221,13 @@ public class ExtendedJavaPlugin extends JavaPlugin implements HelperPlugin {
     }
 
     @Override
+    public void saveResource(@Nonnull final String name) {
+        if (!getRelativeFile(name).exists()) {
+            saveResource(name, false);
+        }
+    }
+
+    @Override
     public void saveResourceRecursively(@Nonnull final String name) {
         saveResourceRecursively(name, false);
     }
@@ -228,7 +235,7 @@ public class ExtendedJavaPlugin extends JavaPlugin implements HelperPlugin {
     @Override
     public void saveResourceRecursively(@Nonnull final String name, final boolean overwrite) {
         Objects.requireNonNull(name, "name");
-        File targetFile = new File(getDataFolder(), name);
+        File targetFile = getRelativeFile(name);
         if (overwrite || !targetFile.exists()) {
             ResourceExtractor.copyResourceRecursively(getClassLoader().getResource(name), targetFile);
         }

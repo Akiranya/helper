@@ -193,6 +193,23 @@ public interface HelperPlugin extends Plugin, TerminableConsumer {
     <T> T setupConfig(@Nonnull String file, @Nonnull T configObject);
 
     /**
+     * Saves the raw contents of any resource embedded with a plugin's .jar
+     * file assuming it can be found using {@link #getResource(String)}.
+     * <p>
+     * The resource is saved into the plugin's data folder using the same
+     * hierarchy as the .jar file (subdirectories are preserved).
+     * <p>
+     * This method will not overwrite existing files and
+     * will silently fail if the files already exist.
+     *
+     * @param name the embedded resource path to look for within the
+     *             plugin's .jar file. (No preceding slash).
+     * @throws IllegalArgumentException if the resource path is null, empty,
+     *                                  or points to a nonexistent resource.
+     */
+    void saveResource(@Nonnull String name);
+
+    /**
      * Saves a bundled file from the plugins resource folder.
      *
      * @param name the name of the file
