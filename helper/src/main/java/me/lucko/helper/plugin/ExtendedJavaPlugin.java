@@ -136,6 +136,14 @@ public class ExtendedJavaPlugin extends JavaPlugin implements HelperPlugin {
 
     @Nonnull
     @Override
+    public <T extends Listener> T registerListenerAndBind(@Nonnull final T listener) {
+        Objects.requireNonNull(listener, "listener");
+        new AutoCloseableListenerWrapper(registerListener(listener)).bindWith(this);
+        return listener;
+    }
+
+    @Nonnull
+    @Override
     public <T extends CommandExecutor> T registerCommand(@Nonnull T command, String permission, String permissionMessage, String description, @Nonnull String... aliases) {
         return CommandMapUtil.registerCommand(this, command, permission, permissionMessage, description, aliases);
     }

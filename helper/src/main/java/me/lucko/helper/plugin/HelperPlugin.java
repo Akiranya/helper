@@ -55,6 +55,20 @@ public interface HelperPlugin extends Plugin, TerminableConsumer {
     <T extends Listener> T registerListener(@Nonnull T listener);
 
     /**
+     * Register a listener with the server.
+     * <p>
+     * The listener will be automatically unregistered when this plugin is disabled.
+     *
+     * <p>{@link me.lucko.helper.Events} should be used instead of this method in most cases.</p>
+     *
+     * @param listener the listener to register
+     * @param <T>      the listener class type
+     * @return the listener
+     */
+    @Nonnull
+    <T extends Listener> T registerListenerAndBind(@Nonnull T listener);
+
+    /**
      * Registers a CommandExecutor with the server
      *
      * @param command the command instance
