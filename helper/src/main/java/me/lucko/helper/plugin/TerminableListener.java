@@ -4,11 +4,20 @@ import me.lucko.helper.terminable.Terminable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-class AutoCloseableListenerWrapper implements Terminable {
+public class TerminableListener implements Terminable {
     private final Listener listener;
 
-    AutoCloseableListenerWrapper(final Listener listener) {
+    TerminableListener(final Listener listener) {
         this.listener = listener;
+    }
+
+    /**
+     * Gets the wrapped listener itself.
+     *
+     * @return the wrapped listener itself
+     */
+    public Listener listener() {
+        return listener;
     }
 
     @Override public void close() throws Exception {
