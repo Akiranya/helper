@@ -136,10 +136,10 @@ public class ExtendedJavaPlugin extends JavaPlugin implements HelperPlugin {
 
     @Nonnull
     @Override
-    public <T extends Listener> TerminableListener registerTerminableListener(@Nonnull final T listener) {
+    public <T extends Listener> TerminableListener<T> registerTerminableListener(@Nonnull final T listener) {
         Objects.requireNonNull(listener, "listener");
         getServer().getPluginManager().registerEvents(listener, this);
-        return new TerminableListener(listener);
+        return new TerminableListener<>(listener);
     }
 
     @Nonnull

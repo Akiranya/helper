@@ -65,7 +65,7 @@ public interface HelperPlugin extends Plugin, TerminableConsumer {
      * @return the listener
      */
     @Nonnull
-    <T extends Listener> TerminableListener registerTerminableListener(@Nonnull T listener);
+    <T extends Listener> TerminableListener<T> registerTerminableListener(@Nonnull T listener);
 
     /**
      * Registers a CommandExecutor with the server

@@ -4,10 +4,10 @@ import me.lucko.helper.terminable.Terminable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-public class TerminableListener implements Terminable {
-    private final Listener listener;
+public class TerminableListener<T extends Listener> implements Terminable {
+    private final T listener;
 
-    TerminableListener(final Listener listener) {
+    TerminableListener(final T listener) {
         this.listener = listener;
     }
 
@@ -16,7 +16,7 @@ public class TerminableListener implements Terminable {
      *
      * @return the wrapped listener itself
      */
-    public Listener listener() {
+    public T listener() {
         return listener;
     }
 
