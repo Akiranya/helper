@@ -1,6 +1,7 @@
 plugins {
     id("me.lucko.kotlin-conventions")
     id("me.lucko.repo-conventions")
+    id("me.lucko.publishing-conventions")
 }
 
 dependencies {
@@ -19,6 +20,13 @@ dependencies {
     api("me.lucko:textlegacy:1.6.5")
     api("net.kyori:event-api:3.0.0")
     api("com.google.code.findbugs:jsr305:3.0.2")
+    api("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0") {
+        exclude(group = "org.jetbrains.kotlin")
+    }
+    api("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0") {
+        exclude(group = "org.jetbrains.kotlin")
+    }
+
     compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0")
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
         exclude(group = "*", module = "*")

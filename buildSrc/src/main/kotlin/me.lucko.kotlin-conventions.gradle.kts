@@ -1,5 +1,3 @@
-import gradle.kotlin.dsl.accessors._e56c6a8408aee35f79834ef2a2113d39.compileOnly
-
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
@@ -7,6 +5,9 @@ plugins {
 
     id("com.github.johnrengelman.shadow")
 }
+
+group = "me.lucko"
+version = "5.6.15"
 
 tasks {
     // Kotlin source files are always UTF-8 by design.
@@ -59,12 +60,6 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
                     exclude(group = "*")
-                }
-                implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0") {
-                    exclude(group = "org.jetbrains.kotlin")
-                }
-                implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0") {
-                    exclude(group = "org.jetbrains.kotlin")
                 }
             }
         }
