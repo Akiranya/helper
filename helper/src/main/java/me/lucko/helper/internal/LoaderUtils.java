@@ -27,17 +27,15 @@ package me.lucko.helper.internal;
 
 import me.lucko.helper.Helper;
 import me.lucko.helper.plugin.HelperPlugin;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
 
 /**
  * Provides the instance which loaded the helper classes into the server
@@ -48,22 +46,25 @@ public final class LoaderUtils {
 
     @Nonnull
     public static synchronized HelperPlugin getPlugin() {
-        if (plugin == null) {
-            JavaPlugin pl = JavaPlugin.getProvidingPlugin(LoaderUtils.class);
-            if (!(pl instanceof HelperPlugin)) {
-                throw new IllegalStateException("helper providing plugin does not implement HelperPlugin: " + pl.getClass().getName());
-            }
-            plugin = (HelperPlugin) pl;
+        if (plugin != null) {
+            return plugin;
+        }
 
+        JavaPlugin pl = JavaPlugin.getProvidingPlugin(LoaderUtils.class);
+
+        if (pl instanceof HelperPlugin) {
+            plugin = (HelperPlugin) pl;
             String pkg = LoaderUtils.class.getPackage().getName();
             pkg = pkg.substring(0, pkg.length() - ".internal".length());
 
             Bukkit.getLogger().info("[helper] helper (" + pkg + ") bound to plugin " + plugin.getName() + " - " + plugin.getClass().getName());
 
             setup();
+
+            return plugin;
         }
 
-        return plugin;
+        throw new IllegalStateException("helper providing plugin does not implement HelperPlugin: " + pl.getClass().getName());
     }
 
     /**

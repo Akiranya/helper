@@ -27,12 +27,24 @@ package me.lucko.helper.plugin
 import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
 import me.lucko.helper.Schedulers
 import me.lucko.helper.Services
+import me.lucko.helper.config.ConfigFactory
+import me.lucko.helper.internal.KLoaderUtils
 import me.lucko.helper.internal.LoaderUtils
 import me.lucko.helper.scheduler.HelperExecutors
 import me.lucko.helper.terminable.composite.CompositeTerminable
 import me.lucko.helper.terminable.module.TerminableModule
+import me.lucko.helper.utils.CommandMapUtil
+import me.lucko.helper.utils.ResourceExtractor
+import ninja.leaping.configurate.ConfigurationNode
+import org.bukkit.command.CommandExecutor
+import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.event.Listener
 import org.bukkit.plugin.ServicePriority
+import java.io.File
+import java.util.*
+import java.util.Objects.requireNonNull
 import java.util.concurrent.TimeUnit
+import javax.annotation.Nonnull
 
 /** An "extended" JavaPlugin class. */
 abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
@@ -50,7 +62,7 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
     override suspend fun onLoadAsync() {
         // LoaderUtils.getPlugin() has the side effect of caching the loader ref
         // do that nice and early. also store whether 'this' plugin is the loader.
-        val loaderPlugin = LoaderUtils.getPlugin()
+        val loaderPlugin = KLoaderUtils.getPlugin()
         isLoaderPlugin = this === loaderPlugin
         terminableRegistry = CompositeTerminable.create()
 
@@ -91,7 +103,36 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
         return terminableRegistry.bindModule(module)
     }
 
-    override fun <T> getService(service: Class<T>): T & Any {
+    override fun <T : Listener> registerListener(listener: T): T {
+        requireNonNull(listener, "listener")
+        server.pluginManager.registerEvents(listener, this)
+        return listener
+    }
+
+    override fun <T : Listener> registerTerminableListener(listener: T): TerminableListener<T> {
+        requireNonNull(listener, "listener")
+        server.pluginManager.registerEvents(listener, this)
+        return TerminableListener(listener)
+    }
+
+    override fun <T : CommandExecutor> registerCommand(
+        command: T,
+        permission: String?,
+        permissionMessage: String?,
+        description: String?,
+        vararg aliases: String
+    ): T {
+        return CommandMapUtil.registerCommand<T>(
+            this@KExtendedJavaPlugin,
+            command,
+            permission,
+            permissionMessage,
+            description,
+            *aliases
+        )
+    }
+
+    override fun <T : Any> getService(service: Class<T>): T {
         return Services.load(service)
     }
 
@@ -117,7 +158,56 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
         return server.pluginManager.getPlugin(name) as T?
     }
 
-    override fun getClazzLoader(): ClassLoader {
-        return super.getClassLoader()
+    private fun getRelativeFile(name: String): File {
+        dataFolder.mkdirs()
+        return File(dataFolder, name)
     }
+
+    override fun getBundledFile(name: String): File {
+        requireNonNull(name, "name")
+        val file = getRelativeFile(name)
+        if (!file.exists()) {
+            saveResource(name, false)
+        }
+        return file
+    }
+
+    override fun loadConfig(file: String): YamlConfiguration {
+        requireNonNull(file, "file")
+        return YamlConfiguration.loadConfiguration(getBundledFile(file))
+    }
+
+    override fun loadConfigNode(file: String): ConfigurationNode {
+        requireNonNull(file, "file")
+        return ConfigFactory.yaml().load(getBundledFile(file))
+    }
+
+    override fun <T : Any> setupConfig(file: String, configObject: T): T {
+        requireNonNull(file, "file")
+        requireNonNull(configObject, "configObject")
+        val f = getRelativeFile(file)
+        ConfigFactory.yaml().load(f, configObject)
+        return configObject
+    }
+
+    override fun saveResource(name: String) {
+        if (!getRelativeFile(name).exists()) {
+            saveResource(name, false)
+        }
+    }
+
+    override fun saveResourceRecursively(name: String) {
+        saveResourceRecursively(name, false)
+    }
+
+    override fun saveResourceRecursively(name: String, overwrite: Boolean) {
+        requireNonNull(name, "name")
+        val targetFile = getRelativeFile(name)
+        if (overwrite || !targetFile.exists()) {
+            ResourceExtractor.copyResourceRecursively(classLoader.getResource(name), targetFile)
+        }
+    }
+
+    override val clazzLoader: ClassLoader
+        get() = super.getClassLoader()
 }
