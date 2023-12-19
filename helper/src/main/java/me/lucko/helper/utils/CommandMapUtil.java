@@ -26,20 +26,15 @@
 package me.lucko.helper.utils;
 
 import com.google.common.base.Preconditions;
-
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.plugin.Plugin;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
 
 /**
  * Utility for interacting with the server's {@link CommandMap} instance.
@@ -74,6 +69,7 @@ public final class CommandMapUtil {
      * @param command the command instance
      * @param aliases the command aliases
      * @param <T>     the command executor class type
+     *
      * @return the command executor
      */
     @Nonnull
@@ -91,10 +87,18 @@ public final class CommandMapUtil {
      * @param description       the command description
      * @param aliases           the command aliases
      * @param <T>               the command executor class type
+     *
      * @return the command executor
      */
     @Nonnull
-    public static <T extends CommandExecutor> T registerCommand(@Nonnull Plugin plugin, @Nonnull T command, String permission, String permissionMessage, String description, @Nonnull String... aliases) {
+    public static <T extends CommandExecutor> T registerCommand(
+            @Nonnull Plugin plugin,
+            @Nonnull T command,
+            @Nullable String permission,
+            @Nullable String permissionMessage,
+            @Nullable String description,
+            @Nonnull String[] aliases
+    ) {
         Preconditions.checkArgument(aliases.length != 0, "No aliases");
         for (String alias : aliases) {
             try {
@@ -130,6 +134,7 @@ public final class CommandMapUtil {
      *
      * @param command the command instance
      * @param <T>     the command executor class type
+     *
      * @return the command executor
      */
     @Nonnull
