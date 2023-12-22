@@ -30,8 +30,7 @@ import com.google.gson.JsonElement;
 
 import me.lucko.helper.gson.GsonProvider;
 
-import net.kyori.text.Component;
-
+import net.kyori.adventure.text.Component;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;

@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     api("redis.clients:jedis:3.6.0")
-    api("org.apache.commons:commons-pool2:2.6.0")
     compileOnly(project(":helper"))
 }
 

@@ -31,7 +31,7 @@ import me.lucko.helper.gson.typeadapters.BukkitSerializableAdapterFactory;
 import me.lucko.helper.gson.typeadapters.GsonSerializableAdapterFactory;
 import me.lucko.helper.gson.typeadapters.JsonElementTreeSerializer;
 import me.lucko.helper.gson.typeadapters.immutable.immutable.ImmutableTypeAdapters;
-import net.kyori.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import javax.annotation.Nonnull;
 import java.io.Reader;
@@ -42,8 +42,8 @@ import java.util.Objects;
  */
 public final class GsonProvider {
 
-    private static final Gson STANDARD_GSON = GsonComponentSerializer
-        .populate(ImmutableTypeAdapters.withImmutableCollectionSerializers(new GsonBuilder()))
+    private static final Gson STANDARD_GSON = GsonComponentSerializer.gson().populator()
+        .apply(ImmutableTypeAdapters.withImmutableCollectionSerializers(new GsonBuilder()))
         .registerTypeHierarchyAdapter(DataTree.class, JsonElementTreeSerializer.INSTANCE)
         .registerTypeAdapterFactory(GsonSerializableAdapterFactory.INSTANCE)
         .registerTypeAdapterFactory(BukkitSerializableAdapterFactory.INSTANCE)
@@ -51,8 +51,8 @@ public final class GsonProvider {
         .disableHtmlEscaping()
         .create();
 
-    private static final Gson PRETTY_PRINT_GSON = GsonComponentSerializer
-        .populate(ImmutableTypeAdapters.withImmutableCollectionSerializers(new GsonBuilder()))
+    private static final Gson PRETTY_PRINT_GSON = GsonComponentSerializer.gson().populator()
+        .apply(ImmutableTypeAdapters.withImmutableCollectionSerializers(new GsonBuilder()))
         .registerTypeHierarchyAdapter(DataTree.class, JsonElementTreeSerializer.INSTANCE)
         .registerTypeAdapterFactory(GsonSerializableAdapterFactory.INSTANCE)
         .registerTypeAdapterFactory(BukkitSerializableAdapterFactory.INSTANCE)

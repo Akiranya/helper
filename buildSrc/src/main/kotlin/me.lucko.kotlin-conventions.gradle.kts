@@ -39,7 +39,7 @@ java {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 }
 
 kotlin {
@@ -48,18 +48,17 @@ kotlin {
     sourceSets {
         val main by getting {
             dependencies {
-                // 为了支持若紫 Eco, 必须自己 shade
+                // 为了支持 eco, 必须 shade
                 implementation(kotlin("stdlib"))
-                // implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.1")
+                implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
                 implementation("org.jetbrains.kotlinx:atomicfu:0.22.0")
-
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
-                    exclude(group = "*")
+                    isTransitive = false
                 }
             }
         }

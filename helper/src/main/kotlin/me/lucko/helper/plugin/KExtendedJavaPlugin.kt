@@ -177,11 +177,13 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
         return YamlConfiguration.loadConfiguration(getBundledFile(file))
     }
 
+    @Deprecated("Subject to change when upgrading to configurate 4.0")
     override fun loadConfigNode(file: String): ConfigurationNode {
         requireNonNull(file, "file")
         return ConfigFactory.yaml().load(getBundledFile(file))
     }
 
+    @Deprecated("Subject to change when upgrading to configurate 4.0")
     override fun <T : Any> setupConfig(file: String, configObject: T): T {
         requireNonNull(file, "file")
         requireNonNull(configObject, "configObject")

@@ -34,7 +34,7 @@ import me.lucko.helper.text3.Text;
 import me.lucko.helper.utils.Players;
 import me.lucko.helper.utils.annotation.NonnullByDefault;
 
-import net.kyori.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -263,7 +263,7 @@ public class PacketScoreboard implements Scoreboard {
     }
 
     static WrappedChatComponent toComponent(String text) {
-        return WrappedChatComponent.fromJson(GsonComponentSerializer.INSTANCE.serialize(Text.fromLegacy(text)));
+        return WrappedChatComponent.fromJson(GsonComponentSerializer.gson().serialize(Text.fromLegacy(text)));
     }
 
 }

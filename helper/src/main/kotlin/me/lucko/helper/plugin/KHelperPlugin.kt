@@ -172,7 +172,7 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
      * @param file the name of the file
      * @return the config instance
      */
-    @Deprecated("")
+    @Deprecated("Subject to change when upgrading to configurate 4.0")
     fun loadConfigNode(file: String): ConfigurationNode
 
     /**
@@ -182,7 +182,7 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
      * @param configObject the config object
      * @param <T> the config object type
     </T> */
-    @Deprecated("")
+    @Deprecated("Subject to change when upgrading to configurate 4.0")
     fun <T : Any> setupConfig(file: String, configObject: T): T
 
     /**

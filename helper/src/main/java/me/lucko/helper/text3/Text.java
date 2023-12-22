@@ -25,12 +25,9 @@
 
 package me.lucko.helper.text3;
 
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.adapter.bukkit.TextAdapter;
-import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
-
-import org.bukkit.command.CommandSender;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -53,27 +50,19 @@ public final class Text {
     }
 
     public static TextComponent fromLegacy(String input, char character) {
-        return LegacyComponentSerializer.legacy().deserialize(input, character);
+        return LegacyComponentSerializer.legacy(character).deserialize(input);
     }
 
     public static TextComponent fromLegacy(String input) {
-        return LegacyComponentSerializer.legacy().deserialize(input);
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(input);
     }
 
     public static String toLegacy(Component component, char character) {
-        return LegacyComponentSerializer.legacy().serialize(component, character);
+        return LegacyComponentSerializer.legacy(character).serialize(component);
     }
 
     public static String toLegacy(Component component) {
-        return LegacyComponentSerializer.legacy().serialize(component);
-    }
-
-    public static void sendMessage(CommandSender sender, Component message) {
-        TextAdapter.sendComponent(sender, message);
-    }
-
-    public static void sendMessage(Iterable<CommandSender> senders, Component message) {
-        TextAdapter.sendComponent(senders, message);
+        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
     }
 
     public static String colorize(String s) {

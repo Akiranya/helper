@@ -2,20 +2,20 @@ import org.gradle.kotlin.dsl.repositories
 
 repositories {
     mavenLocal()
+    mavenCentral()
+
     maven {
+        name = "lucko"
         url = uri("https://repo.lucko.me/")
     }
 
     maven {
+        name = "papermc"
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
 
     maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
-
-    maven {
-        name = "citizens-repo"
+        name = "citizens"
         url = uri("https://maven.citizensnpcs.co/repo")
     }
 }
