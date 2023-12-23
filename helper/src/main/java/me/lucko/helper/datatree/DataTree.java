@@ -53,7 +53,6 @@ import javax.annotation.Nonnull;
  * </pre>
  *
  * <p>Various elements could be parsed as:</p>
- * <p></p>
  * <ul>
  *     <li><code>DataTree.from(root).resolve("some-object", "some-nested-object", "some-numbers", 2).asInt()</code>
  *     would result in the value <code>5</code>.</li>
