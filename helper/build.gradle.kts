@@ -1,8 +1,8 @@
 plugins {
-    id("me.lucko.kotlin-conventions")
-    id("me.lucko.repo-conventions")
-    id("me.lucko.publishing-conventions")
+    id("helper-conventions")
 }
+
+description = "helper"
 
 dependencies {
     // 一般情况该模块的 consumer 不会用到这些 internal 库
@@ -31,5 +31,3 @@ dependencies {
         isTransitive = false
     }
 }
-
-description = "helper"

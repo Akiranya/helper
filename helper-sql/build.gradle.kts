@@ -1,8 +1,8 @@
 plugins {
-    id("me.lucko.kotlin-conventions")
-    id("me.lucko.repo-conventions")
-    id("me.lucko.publishing-conventions")
+    id("helper-conventions")
 }
+
+description = "helper-sql"
 
 dependencies {
     api("me.lucko:sql-streams:1.0.0")
@@ -11,5 +11,3 @@ dependencies {
     compileOnly("org.jetbrains:annotations:24.1.0")
     compileOnly(project(":helper"))
 }
-
-description = "helper-sql"
