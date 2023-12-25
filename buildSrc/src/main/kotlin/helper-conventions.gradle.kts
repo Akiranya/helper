@@ -13,9 +13,6 @@ val userHome: String = when {
     else -> System.getenv("HOME")
 }
 
-group = "me.lucko"
-version = "5.6.15"
-
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 }
@@ -59,15 +56,17 @@ kotlin {
     sourceSets {
         val main by getting {
             dependencies {
-                // 为了支持 eco, 必须 shade
-                implementation(kotlin("stdlib"))
-                implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
-                implementation("org.jetbrains.kotlinx:atomicfu:0.22.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                // 插件 KotlinMC 已包含的库写为 compileOnly
+                // 未包含的库写为 implementation 供其他插件使用
+                // https://modrinth.com/plugin/kotlinmc
+                compileOnly(kotlin("stdlib"))
+                compileOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.0")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
+                compileOnly("org.jetbrains.kotlinx:atomicfu:0.22.0")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
                     isTransitive = false
                 }
@@ -76,8 +75,8 @@ kotlin {
 
         val test by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                compileOnly(kotlin("test"))
+                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
             }
         }
     }
