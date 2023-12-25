@@ -40,7 +40,6 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     /**
      * Register a listener with the server.
      *
-     *
      * [me.lucko.helper.Events] should be used instead of this method in most cases.
      *
      * @param listener the listener to register
@@ -51,7 +50,6 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
 
     /**
      * Register a listener with the server.
-     *
      *
      * The return value is a [TerminableListener] that wraps the listener in it.
      * The [TerminableListener] will automatically unregister the listener when closed.
@@ -155,7 +153,6 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     /**
      * Loads a config file from a file name.
      *
-     *
      * Behaves in the same was as [.getBundledFile] when the file is not present.
      *
      * @param file the name of the file
@@ -189,10 +186,8 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
      * Saves the raw contents of any resource embedded with a plugin's .jar
      * file assuming it can be found using [.getResource].
      *
-     *
      * The resource is saved into the plugin's data folder using the same
      * hierarchy as the .jar file (subdirectories are preserved).
-     *
      *
      * This method will not overwrite existing files and
      * will silently fail if the files already exist.

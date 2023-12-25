@@ -28,7 +28,6 @@ import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
 import me.lucko.helper.Schedulers
 import me.lucko.helper.Services
 import me.lucko.helper.config.ConfigFactory
-import me.lucko.helper.internal.KLoaderUtils
 import me.lucko.helper.internal.LoaderUtils
 import me.lucko.helper.scheduler.HelperExecutors
 import me.lucko.helper.terminable.composite.CompositeTerminable
@@ -41,10 +40,8 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.event.Listener
 import org.bukkit.plugin.ServicePriority
 import java.io.File
-import java.util.*
 import java.util.Objects.requireNonNull
 import java.util.concurrent.TimeUnit
-import javax.annotation.Nonnull
 
 /** An "extended" JavaPlugin class. */
 abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
@@ -62,7 +59,7 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
     override suspend fun onLoadAsync() {
         // LoaderUtils.getPlugin() has the side effect of caching the loader ref
         // do that nice and early. also store whether 'this' plugin is the loader.
-        val loaderPlugin = KLoaderUtils.getPlugin()
+        val loaderPlugin = LoaderUtils.getPlugin()
         isLoaderPlugin = this === loaderPlugin
         terminableRegistry = CompositeTerminable.create()
 
