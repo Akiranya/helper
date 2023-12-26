@@ -54,6 +54,8 @@ class KHelperProfileRepository(
     private val preloadAmount: Int,
 ) : KProfileRepository, TerminableModule {
 
+    // TEST COMMIT
+
     companion object {
         private const val CREATE = """
             CREATE TABLE IF NOT EXISTS {table} (
