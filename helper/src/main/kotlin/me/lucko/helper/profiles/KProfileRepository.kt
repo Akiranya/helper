@@ -28,7 +28,7 @@ package me.lucko.helper.profiles
 import java.util.*
 
 /**
- * A repository of profiles, which can get or lookup [KProfile] instances
+ * A repository of profiles, which can get or lookup [Profile] instances
  * for given unique ids or names.
  *
  * Methods which are prefixed with **get** perform a quick local search,
@@ -48,7 +48,7 @@ interface KProfileRepository {
      * @param uniqueId the unique id to get a profile for
      * @return a profile for the uuid
      */
-    fun getProfile(uniqueId: UUID): KProfile
+    fun getProfile(uniqueId: UUID): Profile
 
     /**
      * Gets a profile from this repository, using the name as the base for the
@@ -63,7 +63,7 @@ interface KProfileRepository {
      * @param name the name to get a profile for
      * @return a profile for the name
      */
-    fun getProfile(name: String): KProfile?
+    fun getProfile(name: String): Profile?
 
     /**
      * Gets a collection of profiles known to the repository.
@@ -73,7 +73,7 @@ interface KProfileRepository {
      *
      * @return a collection of known profiles
      */
-    val knownKProfiles: Collection<KProfile>
+    val knownKProfiles: Collection<Profile>
 
     /**
      * Populates a map of unique id to profile for the given iterable of unique
@@ -87,8 +87,8 @@ interface KProfileRepository {
      *     iterable
      * @see getProfile
      */
-    fun getProfiles(uniqueIds: Iterable<UUID>): Map<UUID, KProfile> {
-        val ret: MutableMap<UUID, KProfile> = hashMapOf()
+    fun getProfiles(uniqueIds: Iterable<UUID>): Map<UUID, Profile> {
+        val ret: MutableMap<UUID, Profile> = hashMapOf()
         for (uniqueId in uniqueIds) {
             val profile = getProfile(uniqueId)
             profile.name?.let {
@@ -109,8 +109,8 @@ interface KProfileRepository {
      *     iterable
      * @see getProfile
      */
-    fun getProfilesByName(names: Iterable<String>): Map<String, KProfile> {
-        val ret: MutableMap<String, KProfile> = hashMapOf()
+    fun getProfilesByName(names: Iterable<String>): Map<String, Profile> {
+        val ret: MutableMap<String, Profile> = hashMapOf()
         for (name in names) {
             getProfile(name)?.let { profile -> ret[name] = profile }
         }
@@ -127,7 +127,7 @@ interface KProfileRepository {
      * @param uniqueId the unique id to get a profile for
      * @return a profile for the uuid
      */
-    suspend fun lookupProfile(uniqueId: UUID): KProfile
+    suspend fun lookupProfile(uniqueId: UUID): Profile
 
     /**
      * Gets a profile from this repository, using the name as the base for the
@@ -142,7 +142,7 @@ interface KProfileRepository {
      * @param name the name to get a profile for
      * @return a profile for the name
      */
-    suspend fun lookupProfile(name: String): KProfile?
+    suspend fun lookupProfile(name: String): Profile?
 
     /**
      * Gets a collection of profiles known to the repository.
@@ -152,7 +152,7 @@ interface KProfileRepository {
      *
      * @return a collection of known profiles
      */
-    suspend fun lookupKnownProfiles(): Collection<KProfile>
+    suspend fun lookupKnownProfiles(): Collection<Profile>
 
     /**
      * Populates a map of unique id to profile for the given iterable of unique
@@ -166,7 +166,7 @@ interface KProfileRepository {
      *     iterable
      * @see getProfile
      */
-    suspend fun lookupProfiles(uniqueIds: Iterable<UUID>): Map<UUID, KProfile>
+    suspend fun lookupProfiles(uniqueIds: Iterable<UUID>): Map<UUID, Profile>
 
     /**
      * Populates a map of name to profile for the given iterable of names.
@@ -179,5 +179,5 @@ interface KProfileRepository {
      *     iterable
      * @see .getProfile
      */
-    suspend fun lookupProfilesByName(names: Iterable<String>): Map<String, KProfile>
+    suspend fun lookupProfilesByName(names: Iterable<String>): Map<String, Profile>
 }

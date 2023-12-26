@@ -25,31 +25,20 @@
 
 package me.lucko.helper.sql.plugin;
 
+import be.bendem.sqlstreams.SqlStream;
 import com.google.common.collect.ImmutableMap;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
 import me.lucko.helper.sql.DatabaseCredentials;
 import me.lucko.helper.sql.Sql;
-import me.lucko.helper.sql.batch.BatchBuilder;
 
-import org.intellij.lang.annotations.Language;
-
-import be.bendem.sqlstreams.SqlStream;
-import be.bendem.sqlstreams.util.SqlConsumer;
-import be.bendem.sqlstreams.util.SqlFunction;
-
+import javax.annotation.Nonnull;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nonnull;
 
 public class HelperSql implements Sql {
 
@@ -64,7 +53,6 @@ public class HelperSql implements Sql {
     private static final long LEAK_DETECTION_THRESHOLD = TimeUnit.SECONDS.toMillis(10);
 
     private final HikariDataSource source;
-    private final SqlStream stream;
 
     public HelperSql(@Nonnull DatabaseCredentials credentials) {
         final HikariConfig hikari = new HikariConfig();
@@ -113,7 +101,6 @@ public class HelperSql implements Sql {
         }
 
         this.source = new HikariDataSource(hikari);
-        this.stream = SqlStream.connect(this.source);
     }
 
     @Nonnull
@@ -126,62 +113,6 @@ public class HelperSql implements Sql {
     @Override
     public Connection getConnection() throws SQLException {
         return Objects.requireNonNull(this.source.getConnection(), "connection is null");
-    }
-
-    @Nonnull
-    @Override
-    public SqlStream stream() {
-        return this.stream;
-    }
-
-    @Override
-    public void execute(@Language("MySQL") @Nonnull String statement, @Nonnull SqlConsumer<PreparedStatement> preparer) {
-        try (Connection c = this.getConnection(); PreparedStatement s = c.prepareStatement(statement)) {
-            preparer.accept(s);
-            s.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public <R> Optional<R> query(@Language("MySQL") @Nonnull String query, @Nonnull SqlConsumer<PreparedStatement> preparer, @Nonnull SqlFunction<ResultSet, R> handler) {
-        try (Connection c = this.getConnection(); PreparedStatement s = c.prepareStatement(query)) {
-            preparer.accept(s);
-            try (ResultSet r = s.executeQuery()) {
-                return Optional.ofNullable(handler.apply(r));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public void executeBatch(@Nonnull BatchBuilder builder) {
-        if (builder.getHandlers().isEmpty()) {
-            return;
-        }
-
-        if (builder.getHandlers().size() == 1) {
-            this.execute(builder.getStatement(), builder.getHandlers().iterator().next());
-            return;
-        }
-
-        try (Connection c = this.getConnection(); PreparedStatement s = c.prepareStatement(builder.getStatement())) {
-            for (SqlConsumer<PreparedStatement> handlers : builder.getHandlers()) {
-                handlers.accept(s);
-                s.addBatch();
-            }
-            s.executeBatch();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public BatchBuilder batch(@Language("MySQL") @Nonnull String statement) {
-        return new HelperSqlBatchBuilder(this, statement);
     }
 
     @Override

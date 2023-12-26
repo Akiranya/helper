@@ -55,7 +55,9 @@ public class HelperProfilesPlugin extends ExtendedJavaPlugin {
         int preloadAmount = config.getInt("preload-amount", 2000);
 
         // provide the ProfileRepository service
-        provideService(ProfileRepository.class, bindModule(new HelperProfileRepository(sql, tableName, preloadAmount)));
+        HelperProfileRepositoryInternal internal = new HelperProfileRepositoryInternal();
+        provideService(ProfileRepository.class, bindModule(new HelperProfileRepository(internal, sql, tableName, preloadAmount)));
+        provideService(KHelperProfileRepository.class, bindModule(new KHelperProfileRepository(internal, sql, tableName, preloadAmount)));
     }
 
 }

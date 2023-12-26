@@ -65,7 +65,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 
 public class HelperProfileRepository implements ProfileRepository, TerminableModule {
-
     private static final String CREATE =
             "CREATE TABLE IF NOT EXISTS {table} (" +
                     "`uniqueid` BINARY(16) NOT NULL PRIMARY KEY, " +
@@ -80,16 +79,13 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     private static final String SELECT_ALL_UIDS = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `uniqueid` IN %s";
     private static final String SELECT_ALL_NAMES = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `name` IN %s GROUP BY `name` ORDER BY `lastupdate` DESC";
 
-    private final Cache<UUID, ImmutableProfile> profileMap = Caffeine.newBuilder()
-            .maximumSize(10_000)
-            .expireAfterAccess(6, TimeUnit.HOURS)
-            .build();
-
+    private final HelperProfileRepositoryInternal internal;
     private final Sql sql;
     private final String tableName;
     private final int preloadAmount;
 
-    public HelperProfileRepository(Sql sql, String tableName, int preloadAmount) {
+    public HelperProfileRepository(HelperProfileRepositoryInternal internal, Sql sql, String tableName, int preloadAmount) {
+        this.internal = internal;
         this.sql = sql;
         this.tableName = tableName;
         this.preloadAmount = preloadAmount;
@@ -130,9 +126,9 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     }
 
     private void updateCache(ImmutableProfile profile) {
-        ImmutableProfile existing = this.profileMap.getIfPresent(profile.getUniqueId());
+        ImmutableProfile existing = internal.profileMap.getIfPresent(profile.getUniqueId());
         if (existing == null || existing.getTimestamp() < profile.getTimestamp()) {
-            this.profileMap.put(profile.getUniqueId(), profile);
+            internal.profileMap.put(profile.getUniqueId(), profile);
         }
     }
 
@@ -179,7 +175,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     @Override
     public Profile getProfile(@Nonnull UUID uniqueId) {
         Objects.requireNonNull(uniqueId, "uniqueId");
-        Profile profile = this.profileMap.getIfPresent(uniqueId);
+        Profile profile = internal.profileMap.getIfPresent(uniqueId);
         if (profile == null) {
             profile = new ImmutableProfile(uniqueId, null, 0);
         }
@@ -190,7 +186,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     @Override
     public Optional<Profile> getProfile(@Nonnull String name) {
         Objects.requireNonNull(name, "name");
-        for (Profile profile : this.profileMap.asMap().values()) {
+        for (Profile profile : internal.profileMap.asMap().values()) {
             if (profile.getName().isPresent() && profile.getName().get().equalsIgnoreCase(name)) {
                 return Optional.of(profile);
             }
@@ -201,7 +197,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     @Nonnull
     @Override
     public Collection<Profile> getKnownProfiles() {
-        return Collections.unmodifiableCollection(this.profileMap.asMap().values());
+        return Collections.unmodifiableCollection(internal.profileMap.asMap().values());
     }
 
     @Nonnull
