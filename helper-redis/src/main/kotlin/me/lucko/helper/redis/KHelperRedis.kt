@@ -31,7 +31,7 @@ import me.lucko.helper.extension.exceptionHandler
 import me.lucko.helper.messaging.KAbstractMessenger
 import me.lucko.helper.messaging.KChannel
 import me.lucko.helper.terminable.composite.CompositeTerminable
-import org.slf4j.Logger
+import me.lucko.helper.utils.Log
 import redis.clients.jedis.BinaryJedisPubSub
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
@@ -41,21 +41,36 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 
 class KHelperRedis(
-    override val logger: Logger,
-    credentials: KRedisCredentials,
+    credentials: RedisCredentials,
 ) : KRedis {
 
     override val jedisPool: JedisPool
+
     override val jedis: Jedis
         get() = jedisPool.resource
 
+    private val redisScope = CoroutineScope(CoroutineName("redis")) + Dispatchers.IO + SupervisorJob() + exceptionHandler()
+
+    override fun close() {
+        redisScope.cancel()
+
+        if (listener != null) {
+            listener!!.unsubscribe()
+            listener = null
+        }
+
+        jedisPool.close()
+        registry.close()
+    }
+
+    override fun <T> getChannel(name: String, type: TypeToken<T>): KChannel<T> {
+        return messenger.getChannel(name, type)
+    }
+
     private val messenger: KAbstractMessenger
     private val channels: MutableSet<String> = HashSet()
-    private val registry = CompositeTerminable.create()
+    private val registry: CompositeTerminable = CompositeTerminable.create()
     private var listener: PubSubListener? = null
-
-    // dedicated coroutine scope
-    private val redisScope = CoroutineScope(CoroutineName("redis")) + Dispatchers.IO + SupervisorJob() + exceptionHandler(logger)
 
     init {
         val config = JedisPoolConfig().apply {
@@ -64,9 +79,9 @@ class KHelperRedis(
 
         // setup jedis
         jedisPool = if (credentials.password.trim().isEmpty()) {
-            JedisPool(config, credentials.host, credentials.port)
+            JedisPool(config, credentials.address, credentials.port)
         } else {
-            JedisPool(config, credentials.host, credentials.port, 2000, credentials.password)
+            JedisPool(config, credentials.address, credentials.port, 2000, credentials.password)
         }.apply {
             getResource().use { jedis -> jedis.ping() }
         }
@@ -75,7 +90,7 @@ class KHelperRedis(
             var broken = false
             do {
                 if (broken) {
-                    logger.info("[Redis] Retrying subscription...")
+                    Log.info("[helper-redis] [kotlin] Retrying subscription...")
                     broken = false
                 }
 
@@ -114,41 +129,22 @@ class KHelperRedis(
         }
 
         messenger = KAbstractMessenger(
-            logger = logger,
-
             outgoingMessages = { channel, message ->
                 jedis.use { jedis -> jedis.publish(channel.toByteArray(StandardCharsets.UTF_8), message) }
             },
 
             notifySub = { channel ->
-                logger.info("[Redis] Subscribing to channel: $channel")
+                Log.info("[helper-redis] [kotlin] Subscribing to channel: $channel")
                 channels.add(channel)
                 listener!!.subscribe(channel.toByteArray(StandardCharsets.UTF_8))
             },
 
             notifyUnsub = { channel ->
-                logger.info("[Redis] Unsubscribing from channel: $channel")
+                Log.info("[helper-redis] [kotlin] Unsubscribing from channel: $channel")
                 channels.remove(channel)
                 listener!!.unsubscribe(channel.toByteArray(StandardCharsets.UTF_8))
             }
         )
-    }
-
-    override fun close() {
-        if (listener != null) {
-            listener!!.unsubscribe()
-            listener = null
-        }
-
-        jedisPool.close()
-        registry.close()
-
-        // shutdown coroutine scope
-        redisScope.cancel()
-    }
-
-    override fun <T> getChannel(name: String, type: TypeToken<T>): KChannel<T> {
-        return messenger.getChannel(name, type)
     }
 
     private inner class PubSubListener : BinaryJedisPubSub() {
@@ -173,12 +169,12 @@ class KHelperRedis(
         }
 
         override fun onSubscribe(channel: ByteArray, subscribedChannels: Int) {
-            logger.info("[Redis] Subscribed to channel: " + channel.toString(StandardCharsets.UTF_8))
+            Log.info("[helper-redis] [kotlin] Subscribed to channel: " + channel.toString(StandardCharsets.UTF_8))
         }
 
         override fun onUnsubscribe(channel: ByteArray, subscribedChannels: Int) {
             val channelName = channel.toString(StandardCharsets.UTF_8)
-            logger.info("[Redis] Unsubscribed from channel: $channelName")
+            Log.info("[helper-redis] [kotlin] Unsubscribed from channel: $channelName")
             subscribed.remove(channelName)
         }
 
