@@ -57,7 +57,7 @@ public class HelperProfilesPlugin extends ExtendedJavaPlugin {
         // provide the ProfileRepository service
         HelperProfileInternal internal = new HelperProfileInternal(sql, tableName, preloadAmount);
         provideService(ProfileRepository.class, bindModule(new HelperProfileRepository(internal)));
-        provideService(KHelperProfileRepository.class, bindModule(new KHelperProfileRepository(internal)));
+        provideService(KHelperProfileRepository.class, new KHelperProfileRepository(internal));
     }
 
 }

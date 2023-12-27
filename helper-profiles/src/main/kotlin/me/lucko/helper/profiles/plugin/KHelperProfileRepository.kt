@@ -28,28 +28,18 @@ package me.lucko.helper.profiles.plugin
 import com.github.benmanes.caffeine.cache.Cache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.lucko.helper.Events
-import me.lucko.helper.Schedulers
 import me.lucko.helper.profiles.KProfileRepository
 import me.lucko.helper.profiles.Profile
 import me.lucko.helper.sql.Sql
-import me.lucko.helper.terminable.TerminableConsumer
-import me.lucko.helper.terminable.module.TerminableModule
-import me.lucko.helper.utils.Log
 import me.lucko.helper.utils.UndashedUuids.fromString
 import me.lucko.helper.utils.UndashedUuids.toString
-import org.bukkit.event.EventPriority
-import org.bukkit.event.player.PlayerLoginEvent
 import java.sql.SQLException
-import java.sql.Timestamp
 import java.util.*
-import javax.annotation.Nonnull
 import kotlin.jvm.optionals.getOrNull
-import kotlin.time.measureTimedValue
 
 class KHelperProfileRepository(
     internal: HelperProfileInternal,
-) : KProfileRepository, TerminableModule {
+) : KProfileRepository {
 
     companion object {
         private fun isValidMcUsername(s: String): Boolean {
@@ -60,39 +50,6 @@ class KHelperProfileRepository(
     private val profileMap: Cache<UUID, ImmutableProfile> = internal.profileMap
     private val sql: Sql = internal.sql
     private val tableName: String = internal.tableName
-    private val preloadAmount: Int = internal.preloadAmount
-
-    override fun setup(@Nonnull consumer: TerminableConsumer) {
-        try {
-            sql.connection.use { c ->
-                c.createStatement().use { s ->
-                    s.execute(replaceTableName(HelperProfileInternal.CREATE))
-                }
-            }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        }
-
-        // preload data
-        if (preloadAmount > 0) {
-            Log.info("[Profiles] Preloading the most recent $preloadAmount entries...")
-            measureTimedValue {
-                preload(preloadAmount)
-            }.also { timedValue ->
-                Log.info("[Profiles] Preloaded " + timedValue.value + " profiles into the cache! - took " + timedValue.duration.inWholeMilliseconds + "ms")
-            }
-        }
-
-        // observe logins
-        Events.subscribe(PlayerLoginEvent::class.java, EventPriority.MONITOR)
-            .filter { e: PlayerLoginEvent -> e.result == PlayerLoginEvent.Result.ALLOWED }
-            .handler { e: PlayerLoginEvent ->
-                val profile = ImmutableProfile(e.player.uniqueId, e.player.name)
-                updateCache(profile)
-                Schedulers.async().run { saveProfile(profile) }
-            }
-            .bindWith(consumer)
-    }
 
     private fun replaceTableName(s: String): String {
         return s.replace("{table}", tableName)
@@ -103,49 +60,6 @@ class KHelperProfileRepository(
         if (existing == null || existing.timestamp < profile.timestamp) {
             profileMap.put(profile.uniqueId, profile)
         }
-    }
-
-    private fun saveProfile(profile: ImmutableProfile) {
-        try {
-            sql.connection.use { c ->
-                c.prepareStatement(replaceTableName(HelperProfileInternal.INSERT)).use { ps ->
-                    ps.setString(1, toString(profile.uniqueId))
-                    val name = profile.name.getOrNull()
-                    ps.setString(2, name!!)
-                    ps.setTimestamp(3, Timestamp(profile.timestamp))
-                    ps.setString(4, name)
-                    ps.setTimestamp(5, Timestamp(profile.timestamp))
-                    ps.execute()
-                }
-            }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun preload(numEntries: Int): Int {
-        var i = 0
-        try {
-            sql.connection.use { c ->
-                c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_ALL_RECENT)).use { ps ->
-                    ps.setInt(1, numEntries)
-                    ps.executeQuery().use { rs ->
-                        while (rs.next()) {
-                            val name = rs.getString("name")
-                            val lastUpdate = rs.getTimestamp("lastupdate")
-                            val uuidString = rs.getString("canonicalid")
-                            val uuid = fromString(uuidString)
-                            val p = ImmutableProfile(uuid, name, lastUpdate.getTime())
-                            updateCache(p)
-                            i++
-                        }
-                    }
-                }
-            }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        }
-        return i
     }
 
     override fun getProfile(uniqueId: UUID): Profile {
