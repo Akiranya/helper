@@ -10,7 +10,7 @@ description = "Provides a cached lookup service for player profiles."
 project.ext.set("name", "helper-profiles")
 
 dependencies {
-    api("com.github.ben-manes.caffeine:caffeine:2.6.2")
+    compileOnlyApi("com.github.ben-manes.caffeine:caffeine:3.1.5")
     compileOnly(project(":helper"))
     compileOnly(project(":helper-sql"))
 }
