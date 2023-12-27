@@ -25,7 +25,6 @@
 
 package me.lucko.helper.sql.plugin;
 
-import be.bendem.sqlstreams.SqlStream;
 import com.google.common.collect.ImmutableMap;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
