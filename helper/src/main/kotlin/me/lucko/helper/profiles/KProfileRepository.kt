@@ -26,6 +26,7 @@
 package me.lucko.helper.profiles
 
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * A repository of profiles, which can get or lookup [Profile] instances
@@ -91,7 +92,7 @@ interface KProfileRepository {
         val ret: MutableMap<UUID, Profile> = hashMapOf()
         for (uniqueId in uniqueIds) {
             val profile = getProfile(uniqueId)
-            profile.name?.let {
+            profile.name.getOrNull()?.let {
                 ret[uniqueId] = profile
             }
         }

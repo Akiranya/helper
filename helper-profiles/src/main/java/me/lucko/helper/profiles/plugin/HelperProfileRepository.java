@@ -26,7 +26,6 @@
 package me.lucko.helper.profiles.plugin;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.Iterables;
 
 import me.lucko.helper.Events;
@@ -59,43 +58,27 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
 public class HelperProfileRepository implements ProfileRepository, TerminableModule {
-    private static final String CREATE =
-            "CREATE TABLE IF NOT EXISTS {table} (" +
-                    "`uniqueid` BINARY(16) NOT NULL PRIMARY KEY, " +
-                    "`name` VARCHAR(16) NOT NULL, " +
-                    "`lastupdate` TIMESTAMP NOT NULL)";
-
-    private static final String INSERT = "INSERT INTO {table} VALUES(UNHEX(?), ?, ?) ON DUPLICATE KEY UPDATE `name` = ?, `lastupdate` = ?";
-    private static final String SELECT_UID = "SELECT `name`, `lastupdate` FROM {table} WHERE `uniqueid` = UNHEX(?)";
-    private static final String SELECT_NAME = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `name` = ? ORDER BY `lastupdate` DESC LIMIT 1";
-    private static final String SELECT_ALL = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table}";
-    private static final String SELECT_ALL_RECENT = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} ORDER BY `lastupdate` DESC LIMIT ?";
-    private static final String SELECT_ALL_UIDS = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `uniqueid` IN %s";
-    private static final String SELECT_ALL_NAMES = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `name` IN %s GROUP BY `name` ORDER BY `lastupdate` DESC";
-
-    private final HelperProfileRepositoryInternal internal;
+    private final Cache<UUID, ImmutableProfile> profileMap;
     private final Sql sql;
     private final String tableName;
     private final int preloadAmount;
 
-    public HelperProfileRepository(HelperProfileRepositoryInternal internal, Sql sql, String tableName, int preloadAmount) {
-        this.internal = internal;
-        this.sql = sql;
-        this.tableName = tableName;
-        this.preloadAmount = preloadAmount;
+    public HelperProfileRepository(HelperProfileInternal internal) {
+        this.profileMap = internal.profileMap;
+        this.sql = internal.sql;
+        this.tableName = internal.tableName;
+        this.preloadAmount = internal.preloadAmount;
     }
 
     @Override
     public void setup(@Nonnull TerminableConsumer consumer) {
         try (Connection c = this.sql.getConnection()) {
             try (Statement s = c.createStatement()) {
-                s.execute(replaceTableName(CREATE));
+                s.execute(replaceTableName(HelperProfileInternal.CREATE));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,15 +109,15 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     }
 
     private void updateCache(ImmutableProfile profile) {
-        ImmutableProfile existing = internal.profileMap.getIfPresent(profile.getUniqueId());
+        ImmutableProfile existing = this.profileMap.getIfPresent(profile.getUniqueId());
         if (existing == null || existing.getTimestamp() < profile.getTimestamp()) {
-            internal.profileMap.put(profile.getUniqueId(), profile);
+            this.profileMap.put(profile.getUniqueId(), profile);
         }
     }
 
     private void saveProfile(ImmutableProfile profile) {
         try (Connection c = this.sql.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(replaceTableName(INSERT))) {
+            try (PreparedStatement ps = c.prepareStatement(replaceTableName(HelperProfileInternal.INSERT))) {
                 ps.setString(1, UndashedUuids.toString(profile.getUniqueId()));
                 ps.setString(2, profile.getName().get());
                 ps.setTimestamp(3, new Timestamp(profile.getTimestamp()));
@@ -150,7 +133,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     private int preload(int numEntries) {
         int i = 0;
         try (Connection c = this.sql.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(replaceTableName(SELECT_ALL_RECENT))) {
+            try (PreparedStatement ps = c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_ALL_RECENT))) {
                 ps.setInt(1, numEntries);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -175,7 +158,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     @Override
     public Profile getProfile(@Nonnull UUID uniqueId) {
         Objects.requireNonNull(uniqueId, "uniqueId");
-        Profile profile = internal.profileMap.getIfPresent(uniqueId);
+        Profile profile = this.profileMap.getIfPresent(uniqueId);
         if (profile == null) {
             profile = new ImmutableProfile(uniqueId, null, 0);
         }
@@ -186,7 +169,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     @Override
     public Optional<Profile> getProfile(@Nonnull String name) {
         Objects.requireNonNull(name, "name");
-        for (Profile profile : internal.profileMap.asMap().values()) {
+        for (Profile profile : this.profileMap.asMap().values()) {
             if (profile.getName().isPresent() && profile.getName().get().equalsIgnoreCase(name)) {
                 return Optional.of(profile);
             }
@@ -197,7 +180,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
     @Nonnull
     @Override
     public Collection<Profile> getKnownProfiles() {
-        return Collections.unmodifiableCollection(internal.profileMap.asMap().values());
+        return Collections.unmodifiableCollection(this.profileMap.asMap().values());
     }
 
     @Nonnull
@@ -211,7 +194,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
 
         return Schedulers.async().supply(() -> {
             try (Connection c = this.sql.getConnection()) {
-                try (PreparedStatement ps = c.prepareStatement(replaceTableName(SELECT_UID))) {
+                try (PreparedStatement ps = c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_UID))) {
                     ps.setString(1, UndashedUuids.toString(uniqueId));
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
@@ -242,7 +225,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
 
         return Schedulers.async().supply(() -> {
             try (Connection c = this.sql.getConnection()) {
-                try (PreparedStatement ps = c.prepareStatement(replaceTableName(SELECT_NAME))) {
+                try (PreparedStatement ps = c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_NAME))) {
                     ps.setString(1, name);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
@@ -271,7 +254,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
             Set<Profile> ret = new HashSet<>();
 
             try (Connection c = this.sql.getConnection()) {
-                try (PreparedStatement ps = c.prepareStatement(replaceTableName(SELECT_ALL))) {
+                try (PreparedStatement ps = c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_ALL))) {
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
                             String name = rs.getString("name");
@@ -332,7 +315,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
         return Schedulers.async().supply(() -> {
             try (Connection c = this.sql.getConnection()) {
                 try (Statement s = c.createStatement()) {
-                    try (ResultSet rs = s.executeQuery(replaceTableName(String.format(SELECT_ALL_UIDS, sb.toString())))) {
+                    try (ResultSet rs = s.executeQuery(replaceTableName(String.format(HelperProfileInternal.SELECT_ALL_UIDS, sb)))) {
                         while (rs.next()) {
                             String name = rs.getString("name");
                             Timestamp lastUpdate = rs.getTimestamp("lastupdate");
@@ -392,7 +375,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
         return Schedulers.async().supply(() -> {
             try (Connection c = this.sql.getConnection()) {
                 try (Statement s = c.createStatement()) {
-                    try (ResultSet rs = s.executeQuery(replaceTableName(String.format(SELECT_ALL_NAMES, sb.toString())))) {
+                    try (ResultSet rs = s.executeQuery(replaceTableName(String.format(HelperProfileInternal.SELECT_ALL_NAMES, sb)))) {
                         while (rs.next()) {
                             String name = rs.getString("name"); // provide a case corrected name
                             Timestamp lastUpdate = rs.getTimestamp("lastupdate");
@@ -412,9 +395,7 @@ public class HelperProfileRepository implements ProfileRepository, TerminableMod
         });
     }
 
-    private static final Pattern MINECRAFT_USERNAME_PATTERN = Pattern.compile("^\\w{3,16}$");
-
     private static boolean isValidMcUsername(String s) {
-        return MINECRAFT_USERNAME_PATTERN.matcher(s).matches();
+        return HelperProfileInternal.MINECRAFT_USERNAME_PATTERN.matcher(s).matches();
     }
 }

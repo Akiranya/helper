@@ -25,6 +25,7 @@
 
 package me.lucko.helper.profiles.plugin
 
+import com.github.benmanes.caffeine.cache.Cache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.lucko.helper.Events
@@ -42,48 +43,30 @@ import org.bukkit.event.player.PlayerLoginEvent
 import java.sql.SQLException
 import java.sql.Timestamp
 import java.util.*
-import java.util.regex.Pattern
 import javax.annotation.Nonnull
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.measureTimedValue
 
 class KHelperProfileRepository(
-    private val internal: HelperProfileRepositoryInternal,
-    private val sql: Sql,
-    private val tableName: String,
-    private val preloadAmount: Int,
+    internal: HelperProfileInternal,
 ) : KProfileRepository, TerminableModule {
 
-    // TEST COMMIT
-
     companion object {
-        private const val CREATE = """
-            CREATE TABLE IF NOT EXISTS {table} (
-                `uniqueid` BINARY(16) NOT NULL PRIMARY KEY,
-                `name` VARCHAR(16) NOT NULL,
-                `lastupdate` TIMESTAMP NOT NULL
-            );
-            """
-        private const val INSERT = "INSERT INTO {table} VALUES(UNHEX(?), ?, ?) ON DUPLICATE KEY UPDATE `name` = ?, `lastupdate` = ?"
-        private const val SELECT_UID = "SELECT `name`, `lastupdate` FROM {table} WHERE `uniqueid` = UNHEX(?)"
-        private const val SELECT_NAME = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `name` = ? ORDER BY `lastupdate` DESC LIMIT 1"
-        private const val SELECT_ALL = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table}"
-        private const val SELECT_ALL_RECENT = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} ORDER BY `lastupdate` DESC LIMIT ?"
-        private const val SELECT_ALL_UIDS = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `uniqueid` IN %s"
-        private const val SELECT_ALL_NAMES = "SELECT HEX(`uniqueid`) AS `canonicalid`, `name`, `lastupdate` FROM {table} WHERE `name` IN %s GROUP BY `name` ORDER BY `lastupdate` DESC"
-
-        private val MINECRAFT_USERNAME_PATTERN = Pattern.compile("^\\w{3,16}$")
-
         private fun isValidMcUsername(s: String): Boolean {
-            return MINECRAFT_USERNAME_PATTERN.matcher(s).matches()
+            return HelperProfileInternal.MINECRAFT_USERNAME_PATTERN.matcher(s).matches()
         }
     }
+
+    private val profileMap: Cache<UUID, ImmutableProfile> = internal.profileMap
+    private val sql: Sql = internal.sql
+    private val tableName: String = internal.tableName
+    private val preloadAmount: Int = internal.preloadAmount
 
     override fun setup(@Nonnull consumer: TerminableConsumer) {
         try {
             sql.connection.use { c ->
                 c.createStatement().use { s ->
-                    s.execute(replaceTableName(CREATE))
+                    s.execute(replaceTableName(HelperProfileInternal.CREATE))
                 }
             }
         } catch (e: SQLException) {
@@ -116,16 +99,16 @@ class KHelperProfileRepository(
     }
 
     private fun updateCache(profile: ImmutableProfile) {
-        val existing = internal.profileMap.getIfPresent(profile.uniqueId)
+        val existing = profileMap.getIfPresent(profile.uniqueId)
         if (existing == null || existing.timestamp < profile.timestamp) {
-            internal.profileMap.put(profile.uniqueId, profile)
+            profileMap.put(profile.uniqueId, profile)
         }
     }
 
     private fun saveProfile(profile: ImmutableProfile) {
         try {
             sql.connection.use { c ->
-                c.prepareStatement(replaceTableName(INSERT)).use { ps ->
+                c.prepareStatement(replaceTableName(HelperProfileInternal.INSERT)).use { ps ->
                     ps.setString(1, toString(profile.uniqueId))
                     val name = profile.name.getOrNull()
                     ps.setString(2, name!!)
@@ -144,7 +127,7 @@ class KHelperProfileRepository(
         var i = 0
         try {
             sql.connection.use { c ->
-                c.prepareStatement(replaceTableName(SELECT_ALL_RECENT)).use { ps ->
+                c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_ALL_RECENT)).use { ps ->
                     ps.setInt(1, numEntries)
                     ps.executeQuery().use { rs ->
                         while (rs.next()) {
@@ -166,7 +149,7 @@ class KHelperProfileRepository(
     }
 
     override fun getProfile(uniqueId: UUID): Profile {
-        var profile: Profile? = internal.profileMap.getIfPresent(uniqueId)
+        var profile: Profile? = profileMap.getIfPresent(uniqueId)
         if (profile == null) {
             profile = ImmutableProfile(uniqueId, null, 0)
         }
@@ -174,7 +157,7 @@ class KHelperProfileRepository(
     }
 
     override fun getProfile(name: String): Profile? {
-        for (profile in internal.profileMap.asMap().values) {
+        for (profile in profileMap.asMap().values) {
             val profileName = profile.name.getOrNull()
             if (profileName != null && profileName.equals(name, ignoreCase = true)) {
                 return profile
@@ -184,16 +167,16 @@ class KHelperProfileRepository(
     }
 
     override val knownKProfiles: Collection<Profile>
-        get() = Collections.unmodifiableCollection(internal.profileMap.asMap().values)
+        get() = Collections.unmodifiableCollection(profileMap.asMap().values)
 
     override suspend fun lookupProfile(uniqueId: UUID): Profile = withContext(Dispatchers.IO) io@{
         val profile = getProfile(uniqueId)
-        if (profile.name != null) {
+        if (profile.name.isPresent) {
             return@io profile
         } else {
             try {
                 sql.connection.use { c ->
-                    c.prepareStatement(replaceTableName(SELECT_UID)).use { ps ->
+                    c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_UID)).use { ps ->
                         ps.setString(1, toString(uniqueId))
                         ps.executeQuery().use { rs ->
                             if (rs.next()) {
@@ -220,7 +203,7 @@ class KHelperProfileRepository(
         } else {
             try {
                 sql.connection.use { c ->
-                    c.prepareStatement(replaceTableName(SELECT_NAME)).use { ps ->
+                    c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_NAME)).use { ps ->
                         ps.setString(1, name)
                         ps.executeQuery().use { rs ->
                             if (rs.next()) {
@@ -246,7 +229,7 @@ class KHelperProfileRepository(
         val ret = HashSet<Profile>()
         try {
             sql.connection.use { c ->
-                c.prepareStatement(replaceTableName(SELECT_ALL)).use { ps ->
+                c.prepareStatement(replaceTableName(HelperProfileInternal.SELECT_ALL)).use { ps ->
                     ps.executeQuery().use { rs ->
                         while (rs.next()) {
                             val name = rs.getString("name")
@@ -273,7 +256,7 @@ class KHelperProfileRepository(
         while (iterator.hasNext()) {
             val u = iterator.next()
             val profile = getProfile(u)
-            if (profile.name != null) {
+            if (profile.name.isPresent) {
                 ret[u] = profile
                 iterator.remove()
             }
@@ -295,7 +278,7 @@ class KHelperProfileRepository(
             try {
                 sql.connection.use { c ->
                     c.createStatement().use { s ->
-                        s.executeQuery(replaceTableName(String.format(SELECT_ALL_UIDS, sb.toString()))).use { rs ->
+                        s.executeQuery(replaceTableName(String.format(HelperProfileInternal.SELECT_ALL_UIDS, sb.toString()))).use { rs ->
                             while (rs.next()) {
                                 val name = rs.getString("name")
                                 val lastUpdate = rs.getTimestamp("lastupdate")
@@ -348,7 +331,7 @@ class KHelperProfileRepository(
             try {
                 sql.connection.use { c ->
                     c.createStatement().use { s ->
-                        s.executeQuery(replaceTableName(String.format(SELECT_ALL_NAMES, sb.toString()))).use { rs ->
+                        s.executeQuery(replaceTableName(String.format(HelperProfileInternal.SELECT_ALL_NAMES, sb.toString()))).use { rs ->
                             while (rs.next()) {
                                 val name = rs.getString("name") // provide a case corrected name
                                 val lastUpdate = rs.getTimestamp("lastupdate")
