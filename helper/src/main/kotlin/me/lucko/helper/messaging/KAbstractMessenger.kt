@@ -34,7 +34,6 @@ import me.lucko.helper.messaging.codec.KCodec
 import me.lucko.helper.messaging.codec.KGZipCodec
 import me.lucko.helper.messaging.codec.KGsonCodec
 import me.lucko.helper.messaging.codec.KMessage
-import org.slf4j.Logger
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.BiConsumer
@@ -57,7 +56,6 @@ open class KAbstractMessenger
  *     should be unsubscribed from
  */
 constructor(
-    override val logger: Logger,
     // consumer for outgoing messages. accepts in the format [channel name, message]
     private val outgoingMessages: (String, ByteArray) -> Unit,
     // consumer for channel names which should be subscribed to.
@@ -96,7 +94,7 @@ constructor(
         override val type: TypeToken<T>,
     ) : KChannel<T> {
         override val codec: KCodec<T> = KGZipCodec(getCodec(type))
-        override val channelScope = CoroutineScope(CoroutineName("abstract-channel-$name")) + Dispatchers.IO + SupervisorJob() + exceptionHandler(messenger.logger)
+        override val channelScope = CoroutineScope(CoroutineName("abstract-channel-$name")) + Dispatchers.IO + SupervisorJob() + exceptionHandler()
 
         val agents: MutableSet<KAbstractChannelAgent<T>> = ConcurrentHashMap.newKeySet()
 
