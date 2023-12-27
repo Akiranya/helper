@@ -10,7 +10,7 @@ description = "Provides Redis clients and implements the helper Messaging system
 project.ext.set("name", "helper-redis")
 
 dependencies {
-    compileOnlyApi("redis.clients:jedis:3.6.3")
+    compileOnlyApi("redis.clients:jedis:3.10.0")
     compileOnly(project(":helper"))
 }
 
