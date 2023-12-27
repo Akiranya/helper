@@ -27,6 +27,7 @@ package me.lucko.helper.profiles.plugin;
 
 import me.lucko.helper.internal.HelperImplementationPlugin;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import me.lucko.helper.profiles.KProfileRepository;
 import me.lucko.helper.profiles.ProfileRepository;
 import me.lucko.helper.sql.DatabaseCredentials;
 import me.lucko.helper.sql.Sql;
@@ -57,7 +58,7 @@ public class HelperProfilesPlugin extends ExtendedJavaPlugin {
         // provide the ProfileRepository service
         HelperProfileInternal internal = new HelperProfileInternal(sql, tableName, preloadAmount);
         provideService(ProfileRepository.class, bindModule(new HelperProfileRepository(internal)));
-        provideService(KHelperProfileRepository.class, new KHelperProfileRepository(internal));
+        provideService(KProfileRepository.class, new KHelperProfileRepository(internal));
     }
 
 }
