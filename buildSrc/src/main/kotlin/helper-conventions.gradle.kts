@@ -77,8 +77,8 @@ kotlin {
 
         val test by getting {
             dependencies {
-                compileOnly(kotlin("test"))
-                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
             }
         }
     }
