@@ -8,6 +8,8 @@ plugins {
     `maven-publish`
 }
 
+group = "me.lucko"
+
 val userHome: String = when {
     System.getProperty("os.name").startsWith("Windows", ignoreCase = true) -> System.getenv("USERPROFILE")
     else -> System.getenv("HOME")
