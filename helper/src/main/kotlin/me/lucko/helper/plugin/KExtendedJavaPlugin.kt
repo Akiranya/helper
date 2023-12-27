@@ -43,7 +43,9 @@ import java.io.File
 import java.util.Objects.requireNonNull
 import java.util.concurrent.TimeUnit
 
-/** An "extended" JavaPlugin class. */
+/**
+ * An "extended" JavaPlugin class.
+ */
 abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
     // the backing terminable registry
     private lateinit var terminableRegistry: CompositeTerminable
@@ -117,7 +119,7 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
         permission: String?,
         permissionMessage: String?,
         description: String?,
-        vararg aliases: String
+        vararg aliases: String,
     ): T {
         return CommandMapUtil.registerCommand<T>(
             this@KExtendedJavaPlugin,

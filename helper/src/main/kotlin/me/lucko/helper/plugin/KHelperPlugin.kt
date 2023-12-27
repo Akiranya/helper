@@ -40,7 +40,8 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     /**
      * Register a listener with the server.
      *
-     * [me.lucko.helper.Events] should be used instead of this method in most cases.
+     * [me.lucko.helper.Events] should be used instead of this method in most
+     * cases.
      *
      * @param listener the listener to register
      * @param <T> the listener class type
@@ -51,11 +52,12 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     /**
      * Register a listener with the server.
      *
-     * The return value is a [TerminableListener] that wraps the listener in it.
-     * The [TerminableListener] will automatically unregister the listener when closed.
+     * The return value is a [TerminableListener] that wraps the listener in
+     * it. The [TerminableListener] will automatically unregister the listener
+     * when closed.
      *
      * @param listener the listener to register
-     * @param <T>      the listener class type
+     * @param <T> the listener class type
      * @return the listener
      */
     fun <T : Listener> registerTerminableListener(listener: T): TerminableListener<T>
@@ -77,7 +79,8 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
      *
      * @param command the command instance
      * @param permission the command permission
-     * @param permissionMessage the message sent when the sender doesn't the required permission
+     * @param permissionMessage the message sent when the sender doesn't the
+     *     required permission
      * @param description the command description
      * @param aliases the command aliases
      * @param <T> the command executor class type
@@ -87,7 +90,7 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
         command: T, permission: String?,
         permissionMessage: String?,
         description: String?,
-        vararg aliases: String
+        vararg aliases: String,
     ): T
 
     /**
@@ -142,7 +145,6 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     /**
      * Gets a bundled file from the plugins resource folder.
      *
-     *
      * If the file is not present, a version of it copied from the jar.
      *
      * @param name the name of the file
@@ -153,7 +155,8 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     /**
      * Loads a config file from a file name.
      *
-     * Behaves in the same was as [.getBundledFile] when the file is not present.
+     * Behaves in the same was as [.getBundledFile] when the file is not
+     * present.
      *
      * @param file the name of the file
      * @return the config instance
@@ -163,8 +166,8 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     /**
      * Loads a config file from a file name.
      *
-     *
-     * Behaves in the same was as [.getBundledFile] when the file is not present.
+     * Behaves in the same was as [.getBundledFile] when the file is not
+     * present.
      *
      * @param file the name of the file
      * @return the config instance
@@ -177,8 +180,8 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
      *
      * @param file the name of the file
      * @param configObject the config object
-     * @param <T> the config object type
-    </T> */
+     * @param <T> the config object type </T>
+     */
     @Deprecated("Subject to change when upgrading to configurate 4.0")
     fun <T : Any> setupConfig(file: String, configObject: T): T
 
@@ -189,13 +192,13 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
      * The resource is saved into the plugin's data folder using the same
      * hierarchy as the .jar file (subdirectories are preserved).
      *
-     * This method will not overwrite existing files and
-     * will silently fail if the files already exist.
+     * This method will not overwrite existing files and will silently fail if
+     * the files already exist.
      *
-     * @param name the embedded resource path to look for within the
-     * plugin's .jar file. (No preceding slash).
-     * @throws IllegalArgumentException if the resource path is null, empty,
-     * or points to a nonexistent resource.
+     * @param name the embedded resource path to look for within the plugin's
+     *     .jar file. (No preceding slash).
+     * @throws IllegalArgumentException if the resource path is null, empty, or
+     *     points to a nonexistent resource.
      */
     fun saveResource(name: String)
 
@@ -207,7 +210,8 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     fun saveResourceRecursively(name: String)
 
     /**
-     * Saves a bundled file from the plugins resource folder, optionally overwriting any existing file.
+     * Saves a bundled file from the plugins resource folder, optionally
+     * overwriting any existing file.
      *
      * @param name the name of the file
      */

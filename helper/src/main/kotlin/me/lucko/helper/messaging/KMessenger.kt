@@ -25,18 +25,14 @@
 package me.lucko.helper.messaging
 
 import com.google.common.reflect.TypeToken
-import kotlinx.coroutines.CoroutineExceptionHandler
 import me.lucko.helper.messaging.conversation.KConversationChannel
 import me.lucko.helper.messaging.conversation.KConversationMessage
 import me.lucko.helper.messaging.conversation.KSimpleConversationChannel
 import me.lucko.helper.messaging.reqresp.KReqRespChannel
 import me.lucko.helper.messaging.reqresp.KSimpleReqRespChannel
-import org.slf4j.Logger
 
 /** Represents an object which manages messaging [KChannel]s. */
 interface KMessenger {
-    val logger: Logger
-
     /**
      * Gets a channel by name.
      *

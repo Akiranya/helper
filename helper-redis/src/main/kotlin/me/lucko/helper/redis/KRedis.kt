@@ -29,11 +29,17 @@ import me.lucko.helper.terminable.Terminable
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
 
-/** Represents an individual redis instance, created by the library. */
+/**
+ * Represents an individual redis instance, created by the library.
+ */
 interface KRedis : Terminable, KMessenger {
-    /** Gets the JedisPool instance backing the redis instance */
+    /**
+     * Gets the JedisPool instance backing the redis instance
+     */
     val jedisPool: JedisPool
 
-    /** Gets a Jedis instance from the JedisPool. */
+    /**
+     * Gets a Jedis instance from the JedisPool.
+     */
     val jedis: Jedis
 }

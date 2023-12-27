@@ -87,7 +87,7 @@ public class HelperRedis implements Redis {
                 try (Jedis jedis = getJedis()) {
                     try {
                         HelperRedis.this.listener = new PubSubListener();
-                        jedis.subscribe(HelperRedis.this.listener, "helper-redis-dummy".getBytes(StandardCharsets.UTF_8));
+                        jedis.subscribe(HelperRedis.this.listener, "redis-dummy".getBytes(StandardCharsets.UTF_8));
                     } catch (Exception e) {
                         // Attempt to unsubscribe this instance and try again.
                         new RuntimeException("Error subscribing to listener", e).printStackTrace();
@@ -110,7 +110,7 @@ public class HelperRedis implements Redis {
 
         Schedulers.async().runRepeating(() -> {
             // ensure subscribed to all channels
-            PubSubListener listener = HelperRedis.this.listener;
+            PubSubListener listener = this.listener;
 
             if (listener == null || !listener.isSubscribed()) {
                 return;

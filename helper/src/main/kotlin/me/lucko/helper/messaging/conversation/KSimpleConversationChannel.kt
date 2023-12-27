@@ -53,10 +53,10 @@ class KSimpleConversationChannel<T : KConversationMessage, R : KConversationMess
 ) : KConversationChannel<T, R> {
     override val outgoingChannel: KChannel<T> = messenger.getChannel("$name-o", outgoingType)
     override val replyChannel: KChannel<R> = messenger.getChannel("$name-r", replyType)
-    override val channelScope = CoroutineScope(CoroutineName("conversation-channel-$name")) + Dispatchers.IO + SupervisorJob() + exceptionHandler(messenger.logger)
+    override val channelScope = CoroutineScope(CoroutineName("conversation-channel-$name")) + Dispatchers.IO + SupervisorJob() + exceptionHandler()
 
     private val agents: MutableSet<Agent<T, R>> = ConcurrentHashMap.newKeySet()
-    private val timeoutScope = CoroutineScope(CoroutineName("conversation-channel-$name-timeout")) + Dispatchers.IO + SupervisorJob() + exceptionHandler(messenger.logger)
+    private val timeoutScope = CoroutineScope(CoroutineName("conversation-channel-$name-timeout")) + Dispatchers.IO + SupervisorJob() + exceptionHandler()
     private val replyListeners: SetMultimap<UUID, ReplyListenerRegistration<R>> = Multimaps.newSetMultimap(ConcurrentHashMap()) { ConcurrentHashMap.newKeySet() }
     private val replyAgent: KChannelAgent<R> = replyChannel.newAgent(ReplyListener())
 

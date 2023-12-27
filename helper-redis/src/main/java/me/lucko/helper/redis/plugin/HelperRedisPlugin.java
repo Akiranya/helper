@@ -25,31 +25,42 @@
 
 package me.lucko.helper.redis.plugin;
 
+import javax.annotation.Nonnull;
 import me.lucko.helper.internal.HelperImplementationPlugin;
+import me.lucko.helper.messaging.KMessenger;
 import me.lucko.helper.messaging.Messenger;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import me.lucko.helper.redis.KHelperRedis;
+import me.lucko.helper.redis.KRedis;
+import me.lucko.helper.redis.KRedisProvider;
 import me.lucko.helper.redis.Redis;
 import me.lucko.helper.redis.RedisCredentials;
 import me.lucko.helper.redis.RedisProvider;
 
-import javax.annotation.Nonnull;
-
 @HelperImplementationPlugin
-public class HelperRedisPlugin extends ExtendedJavaPlugin implements RedisProvider {
+public class HelperRedisPlugin extends ExtendedJavaPlugin implements RedisProvider, KRedisProvider {
     private RedisCredentials globalCredentials;
     private Redis globalRedis;
+    private KRedis kGlobalRedis; // full kotlin support
 
     @Override
     protected void enable() {
         this.globalCredentials = RedisCredentials.fromConfig(loadConfig("config.yml"));
         this.globalRedis = getRedis(this.globalCredentials);
         this.globalRedis.bindWith(this);
+        this.kGlobalRedis = getKRedis(this.globalCredentials);
+        this.kGlobalRedis.bindWith(this);
 
         // expose all instances as services.
         provideService(RedisProvider.class, this);
         provideService(RedisCredentials.class, this.globalCredentials);
         provideService(Redis.class, this.globalRedis);
         provideService(Messenger.class, this.globalRedis);
+
+        // also for kotlin instances.
+        provideService(KRedisProvider.class, this);
+        provideService(KRedis.class, this.kGlobalRedis);
+        provideService(KMessenger.class, this.kGlobalRedis);
     }
 
     @Nonnull
@@ -68,5 +79,17 @@ public class HelperRedisPlugin extends ExtendedJavaPlugin implements RedisProvid
     @Override
     public RedisCredentials getGlobalCredentials() {
         return this.globalCredentials;
+    }
+
+    @Nonnull
+    @Override
+    public KRedis getKRedis() {
+        return this.kGlobalRedis;
+    }
+
+    @Nonnull
+    @Override
+    public KRedis getKRedis(@Nonnull RedisCredentials credentials) {
+        return new KHelperRedis(credentials);
     }
 }

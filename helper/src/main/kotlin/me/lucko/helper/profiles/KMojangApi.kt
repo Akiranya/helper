@@ -34,7 +34,9 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.util.*
 
-/** Utilities for interacting with the Mojang API. */
+/**
+ * Utilities for interacting with the Mojang API.
+ */
 @Deprecated("API subject to change")
 object KMojangApi {
     private const val PROFILES_URL = "https://api.mojang.com/users/profiles/minecraft/%s"
