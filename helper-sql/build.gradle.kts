@@ -10,9 +10,9 @@ description = "Provides SQL datasources using HikariCP."
 project.ext.set("name", "helper-sql")
 
 dependencies {
-    compileOnlyApi("me.lucko:sql-streams:1.0.0")
     compileOnlyApi("com.zaxxer:HikariCP:5.0.1")
-    compileOnlyApi("com.mysql:mysql-connector-j:8.2.0")
+    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("com.mysql:mysql-connector-j:8.2.0")
     compileOnly("org.jetbrains:annotations:24.1.0")
     compileOnly(project(":helper"))
 }

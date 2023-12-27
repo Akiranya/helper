@@ -11,6 +11,7 @@ project.ext.set("name", "helper-profiles")
 
 dependencies {
     compileOnlyApi("com.github.ben-manes.caffeine:caffeine:3.1.5")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.5")
     compileOnly(project(":helper"))
     compileOnly(project(":helper-sql"))
 }

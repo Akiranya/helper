@@ -7,7 +7,8 @@ version = "3.0.0"
 description = "Implements the helper Messaging system using LilyPad."
 
 dependencies {
-    api("lilypad.client.connect:api:0.0.1-SNAPSHOT")
+    compileOnlyApi("lilypad.client.connect:api:0.0.1-SNAPSHOT")
+    implementation("lilypad.client.connect:api:0.0.1-SNAPSHOT")
     compileOnly(project(":helper"))
 }
 

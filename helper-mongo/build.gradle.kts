@@ -10,8 +10,9 @@ project.ext.set("name", "helper-mongo")
 description = "Provides MongoDB datasources."
 
 dependencies {
-    compileOnlyApi("org.mongodb:mongo-java-driver:3.12.12")
     compileOnlyApi("org.mongodb.morphia:morphia:1.3.2")
+    implementation("org.mongodb.morphia:morphia:1.3.2")
+    implementation("org.mongodb:mongo-java-driver:3.12.12")
     compileOnly(project(":helper"))
 }
 

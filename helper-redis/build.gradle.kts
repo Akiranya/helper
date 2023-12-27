@@ -11,6 +11,7 @@ project.ext.set("name", "helper-redis")
 
 dependencies {
     compileOnlyApi("redis.clients:jedis:3.10.0")
+    implementation("redis.clients:jedis:3.10.0")
     compileOnly(project(":helper"))
 }
 

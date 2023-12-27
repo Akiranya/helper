@@ -8,8 +8,9 @@ description = "JavaScript plugins powered by helper."
 project.ext.set("name", "helper-js")
 
 dependencies {
-    api("me.lucko:scriptcontroller:1.2")
-    api("io.github.classgraph:classgraph:4.6.9")
+    compileOnlyApi("me.lucko:scriptcontroller:1.2")
+    implementation("me.lucko:scriptcontroller:1.2")
+    implementation("io.github.classgraph:classgraph:4.6.9")
     compileOnly(project(":helper"))
 }
 
