@@ -1,8 +1,8 @@
-import net.minecrell.pluginyml.paper.PaperPluginDescription
+import net.minecrell.pluginyml.paper.PaperPluginDescription.RelativeLoadOrder
 
 plugins {
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version("0.6.0")
+    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
 }
 
 version = "1.2.0"
@@ -10,10 +10,19 @@ description = "Provides a cached lookup service for player profiles."
 project.ext.set("name", "helper-profiles")
 
 dependencies {
-    compileOnlyApi("com.github.ben-manes.caffeine:caffeine:3.1.5")
-    implementation("com.github.ben-manes.caffeine:caffeine:3.1.5")
+    implementation("com.github.ben-manes.caffeine", "caffeine", "3.1.5") {
+        exclude("com.google.errorprone", "error_prone_annotations")
+        exclude("org.checkerframework", "checker-qual")
+    }
     compileOnly(project(":helper"))
     compileOnly(project(":helper-sql"))
+}
+
+tasks {
+    shadowJar {
+        val shadePattern = "me.lucko.helper.profiles.plugin.external."
+        relocate("com.github.benmanes.caffeine", shadePattern + "caffeine")
+    }
 }
 
 paper {
@@ -26,11 +35,11 @@ paper {
     serverDependencies {
         register("helper") {
             required = true
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            load = RelativeLoadOrder.BEFORE
         }
         register("helper-sql") {
             required = true
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            load = RelativeLoadOrder.BEFORE
         }
     }
 }

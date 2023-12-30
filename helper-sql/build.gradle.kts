@@ -2,7 +2,7 @@ import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version("0.6.0")
+    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
 }
 
 version = "1.3.2"
@@ -10,11 +10,27 @@ description = "Provides SQL datasources using HikariCP."
 project.ext.set("name", "helper-sql")
 
 dependencies {
-    compileOnlyApi("com.zaxxer:HikariCP:5.0.1")
-    implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("com.mysql:mysql-connector-j:8.2.0")
-    compileOnly("org.jetbrains:annotations:24.1.0")
+    // 由于 consumer 几乎不会直接用到 HikariCP 因此使用 implementation
+    implementation("com.zaxxer", "HikariCP", "5.0.1") {
+        exclude("org.slf4j", "slf4j-api")
+    }
+    runtimeOnly("com.mysql", "mysql-connector-j", "8.2.0")
     compileOnly(project(":helper"))
+}
+
+tasks {
+    shadowJar {
+        exclude("/INFO_*")
+        exclude("/README")
+        exclude("/LICENSE")
+        exclude("/google/**")
+
+        val shadePattern = "me.lucko.helper.sql.external."
+        relocate("com.mysql", shadePattern + "mysql")
+        relocate("com.zaxxer.hikari", shadePattern + "hikari")
+        relocate("com.google.protobuf", shadePattern + "protobuf")
+        relocate("be.bendem.sqlstreams", "me.lucko.helper.sql.streams")
+    }
 }
 
 paper {

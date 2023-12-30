@@ -58,20 +58,28 @@ kotlin {
     sourceSets {
         val main by getting {
             dependencies {
-                // 插件 KotlinMC 已包含的库写为 compileOnly
-                // 未包含的库写为 implementation 供其他插件使用
-                // https://modrinth.com/plugin/kotlinmc
+                /*
+                    由于我们依赖第三方插件 KotlinMC (Release: https://modrinth.com/plugin/kotlinmc)
+                    因此我们不需要将 Kotlin 所有的运行时环境打包进我们自己的 JAR
+                    因此大部分都是用的 compileOnly
+
+                    关于是用 compileOnly 还是 implementation 的原因：
+                    - compileOnly = Kotlin JAR 已提供运行时，因此编译时依赖就行，无需打包进 JAR
+                    - implementation = Kotlin JAR 未提供运行时，因此不仅需要编译时依赖，还需要打包进 JAR
+                */
                 compileOnly(kotlin("stdlib"))
                 compileOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
                 compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0")
                 compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
                 compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.0")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
+                    exclude("org.jetbrains.kotlin")
+                    exclude("org.jetbrains.kotlinx")
+                    exclude("com.google.guava", "guava")
+                }
                 compileOnly("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
                 compileOnly("org.jetbrains.kotlinx:atomicfu:0.22.0")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
-                    isTransitive = false
-                }
             }
         }
 
@@ -109,12 +117,14 @@ publishing {
 
 tasks {
     compileJava {
-        options.compilerArgs.addAll(listOf(
-            "-Xlint:-try",
-            "-Xlint:-deprecation",
-            "-Xlint:-rawtypes",
-            "-Xlint:-unchecked",
-        ))
+        options.compilerArgs.addAll(
+            listOf(
+                "-Xlint:-try",
+                "-Xlint:-deprecation",
+                "-Xlint:-rawtypes",
+                "-Xlint:-unchecked",
+            )
+        )
     }
 
     // Kotlin source files are always UTF-8 by design.
@@ -138,5 +148,22 @@ tasks {
             exclude("META-INF/versions/**")
             exclude("META-INF/**.kotlin_module")
         }
+        from("${rootProject.rootDir}") {
+            include("LICENSE.txt")
+        }
+    }
+
+    processResources {
+        from("${rootProject.rootDir}") {
+            include("LICENSE.txt")
+        }
+    }
+
+    javadoc {
+        enabled = false
+    }
+
+    javadocJar {
+        enabled = false
     }
 }

@@ -1,8 +1,8 @@
-import net.minecrell.pluginyml.paper.PaperPluginDescription
+import net.minecrell.pluginyml.paper.PaperPluginDescription.RelativeLoadOrder
 
 plugins {
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version("0.6.0")
+    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
 }
 
 version = "1.2.1"
@@ -10,9 +10,19 @@ description = "Provides Redis clients and implements the helper Messaging system
 project.ext.set("name", "helper-redis")
 
 dependencies {
-    compileOnlyApi("redis.clients:jedis:3.10.0")
-    implementation("redis.clients:jedis:3.10.0")
+    val jedisVersion = "3.10.0"
+    implementation("redis.clients", "jedis", jedisVersion) {
+        exclude("org.slf4j", "slf4j-api")
+    }
     compileOnly(project(":helper"))
+}
+
+tasks {
+    shadowJar {
+        val shadePattern = "me.lucko.helper.redis.external."
+        relocate("redis.clients.jedis", shadePattern + "jedis")
+        relocate("org.apache.commons.pool", shadePattern + "pool2")
+    }
 }
 
 paper {
@@ -25,7 +35,7 @@ paper {
     serverDependencies {
         register("helper") {
             required = true
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            load = RelativeLoadOrder.BEFORE
         }
     }
 }
