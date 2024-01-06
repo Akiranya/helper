@@ -68,10 +68,10 @@ kotlin {
                     - implementation = Kotlin JAR 未提供运行时，因此不仅需要编译时依赖，还需要打包进 JAR
                 */
                 compileOnly(kotlin("stdlib"))
-                compileOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.0")
+                compileOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.2")
                 compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
                     exclude("org.jetbrains.kotlin")
@@ -79,7 +79,7 @@ kotlin {
                     exclude("com.google.guava", "guava")
                 }
                 compileOnly("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
-                compileOnly("org.jetbrains.kotlinx:atomicfu:0.22.0")
+                compileOnly("org.jetbrains.kotlinx:atomicfu:0.23.1")
             }
         }
 
