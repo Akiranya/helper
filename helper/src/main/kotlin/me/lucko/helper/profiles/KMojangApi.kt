@@ -28,7 +28,7 @@ package me.lucko.helper.profiles
 import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.lucko.helper.utils.KUndashedUuids
+import me.lucko.helper.utils.UndashedUuids
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
@@ -57,7 +57,7 @@ object KMojangApi {
             jsonReader.use { reader ->
                 reader.beginObject()
                 reader.skipValue()
-                KUndashedUuids.fromString(reader.nextString())
+                UndashedUuids.fromString(reader.nextString())
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -96,7 +96,7 @@ object KMojangApi {
     suspend fun getUsernameHistory(uuid: UUID): List<String> = withContext(Dispatchers.IO) io@{
         val names = arrayListOf<String>()
         try {
-            val url = URL(String.format(NAME_HISTORY_URL, KUndashedUuids.toString(uuid)))
+            val url = URL(String.format(NAME_HISTORY_URL, UndashedUuids.toString(uuid)))
             val jsonReader = JsonReader(InputStreamReader(url.openConnection().getInputStream()))
             jsonReader.use { reader ->
                 reader.beginArray()
