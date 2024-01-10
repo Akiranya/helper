@@ -263,7 +263,7 @@ public class PacketScoreboard implements Scoreboard {
     }
 
     static WrappedChatComponent toComponent(String text) {
-        return WrappedChatComponent.fromJson(GsonComponentSerializer.gson().serialize(Text.fromLegacy(text)));
+        return WrappedChatComponent.fromJson(GsonComponentSerializer.gson().serialize(Text.fromLegacyAmpersand(text)));
     }
 
 }
