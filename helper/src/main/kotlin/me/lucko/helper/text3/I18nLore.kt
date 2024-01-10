@@ -41,27 +41,27 @@ private constructor() {
      * The following is an example lore format in YAML file:
      * ```yaml
      * lore:
-     *   - menu.enchantment.icon.description
-     *   - general.empty
-     *   - menu.enchantment.icon.rarity
-     *   - menu.enchantment.icon.target
-     *   - menu.enchantment.icon.level
-     *   - general.empty
-     *   - menu.enchantment.icon.conflict.title
-     *   - menu.enchantment.icon.conflict.item
-     *   - menu.enchantment.icon.charging.title
-     *   - menu.enchantment.icon.charging.fuel_item
-     *   - menu.enchantment.icon.charging.consume_amount
-     *   - menu.enchantment.icon.charging.recharge_amount
-     *   - menu.enchantment.icon.charging.max_amount
-     *   - menu.enchantment.icon.obtaining.title
-     *   - menu.enchantment.icon.obtaining.enchanting
-     *   - menu.enchantment.icon.obtaining.villager
-     *   - menu.enchantment.icon.obtaining.loot_generation
-     *   - menu.enchantment.icon.obtaining.fishing
-     *   - menu.enchantment.icon.obtaining.mob_spawning
-     *   - general.empty
-     *   - menu.enchantment.icon.preview
+     * - menu.enchant.icon.description
+     * - menu.enchant.icon.empty
+     * - menu.enchant.icon.rarity
+     * - menu.enchant.icon.target
+     * - menu.enchant.icon.level
+     * - menu.enchant.icon.empty
+     * - menu.enchant.icon.conflict.title
+     * - menu.enchant.icon.conflict.item
+     * - menu.enchant.icon.charging.title
+     * - menu.enchant.icon.charging.fuel_item
+     * - menu.enchant.icon.charging.consume_amount
+     * - menu.enchant.icon.charging.recharge_amount
+     * - menu.enchant.icon.charging.max_amount
+     * - menu.enchant.icon.obtaining.title
+     * - menu.enchant.icon.obtaining.enchanting
+     * - menu.enchant.icon.obtaining.villager
+     * - menu.enchant.icon.obtaining.loot_generation
+     * - menu.enchant.icon.obtaining.fishing
+     * - menu.enchant.icon.obtaining.mob_spawning
+     * - menu.enchant.icon.empty
+     * - menu.enchant.icon.preview
      * ```
      *
      * Calling this function is just like appending the [key] to the list.
