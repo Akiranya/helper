@@ -11,7 +11,7 @@ import java.util.*
 val String?.mini: Component
     get() = if (this == null) Component.empty() else MiniMessage.miniMessage().deserialize(this)
 
-val List<String>?.mini: List<Component>
+val Iterable<String>?.mini: List<Component>
     get() = this?.map(String::mini) ?: emptyList()
 
 ////// TranslatableComponent ///////
@@ -19,7 +19,7 @@ val List<String>?.mini: List<Component>
 val String?.translatable: TranslatableComponent
     get() = if (this == null) error("key must be not null") else Component.translatable(this)
 
-val List<String>?.translatable: List<TranslatableComponent>
+val Iterable<String>?.translatable: List<TranslatableComponent>
     get() = this?.map(String::translatable) ?: emptyList()
 
 fun TranslatableComponent.arguments(vararg args: String): TranslatableComponent =
