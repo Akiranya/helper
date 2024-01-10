@@ -3,6 +3,8 @@ package me.lucko.helper.text3
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TranslatableComponent
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.translation.GlobalTranslator
+import java.util.*
 
 ////// Component //////
 
@@ -31,3 +33,9 @@ fun TranslatableComponent.Builder.arguments(vararg args: String): TranslatableCo
 
 fun TranslatableComponent.Builder.arguments(args: List<String>): TranslatableComponent.Builder =
     arguments(args.mini)
+
+fun Component?.i18n(locale: Locale): Component =
+    if (this == null) Component.empty() else GlobalTranslator.render(this, locale)
+
+fun Iterable<Component>?.i18n(locale: Locale): List<Component> =
+    this?.map { it.i18n(locale) } ?: listOf()
