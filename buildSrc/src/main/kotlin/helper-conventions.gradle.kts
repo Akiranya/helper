@@ -119,10 +119,14 @@ tasks {
     compileJava {
         options.compilerArgs.addAll(
             listOf(
-                "-Xlint:-try",
+                // FIXME i dunno why "-Xlint:none" not working
                 "-Xlint:-deprecation",
+                "-Xlint:-overrides",
                 "-Xlint:-rawtypes",
+                "-Xlint:-serial",
+                "-Xlint:-try",
                 "-Xlint:-unchecked",
+                "-Xlint:-varargs",
             )
         )
     }
