@@ -182,9 +182,7 @@ tasks {
     register<Task>("deployJar") {
         group = "mewcraft"
         doLast {
-            exec {
-                commandLine("rsync", finalJarPath.value, "dev:data/dev/jar")
-            }
+            exec { commandLine("rsync", finalJarPath.value, "dev:data/dev/jar") }
         }
     }
     register<Task>("deployJarFresh") {

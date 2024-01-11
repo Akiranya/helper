@@ -83,10 +83,21 @@ kotlin {
     }
 }
 
-tasks.shadowJar {
-    relocate("net.kyori.event", "me.lucko.helper.eventbus")
-    relocate("ninja.leaping.configurate", "me.lucko.helper.config")
-    // 特意不 relocate MCCoroutine 因为 consumers 会直接 join 该 JAR 的 classpath
+tasks {
+    shadowJar {
+        relocate("net.kyori.event", "me.lucko.helper.eventbus")
+        relocate("ninja.leaping.configurate", "me.lucko.helper.config")
+        // 特意不 relocate MCCoroutine 因为 consumers 会直接 join 该 JAR 的 classpath
+    }
+
+    // to fix org.gradle.internal.execution.WorkValidationException
+    // TODO better solution?
+    named("copyJar") {
+        mustRunAfter(project(":helper-mongo").tasks.build)
+        mustRunAfter(project(":helper-profiles").tasks.build)
+        mustRunAfter(project(":helper-redis").tasks.build)
+        mustRunAfter(project(":helper-sql").tasks.build)
+    }
 }
 
 paper {
