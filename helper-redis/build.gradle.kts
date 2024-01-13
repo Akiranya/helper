@@ -21,7 +21,7 @@ tasks {
     shadowJar {
         val shadePattern = "me.lucko.helper.redis.external."
         relocate("redis.clients.jedis", shadePattern + "jedis")
-        relocate("org.apache.commons.pool", shadePattern + "pool2")
+        relocate("org.apache.commons.pool", shadePattern + "pool")
     }
 }
 
