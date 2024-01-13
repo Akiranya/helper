@@ -11,10 +11,10 @@ project.ext.set("name", "helper-sql")
 
 dependencies {
     // 由于 consumer 几乎不会直接用到 HikariCP 因此使用 implementation
-    implementation("com.zaxxer", "HikariCP", "5.0.1") {
+    implementation("com.zaxxer", "HikariCP", "5.1.0") {
         exclude("org.slf4j", "slf4j-api")
     }
-    runtimeOnly("com.mysql", "mysql-connector-j", "8.2.0")
+    // runtimeOnly("com.mysql", "mysql-connector-j", "8.2.0") // Paper 的 runtime 已经包含该依赖
     compileOnly(project(":helper"))
 }
 
