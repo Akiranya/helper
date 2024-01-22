@@ -35,8 +35,6 @@ import java.io.File
 import javax.annotation.Nonnull
 
 interface KHelperPlugin : Plugin, TerminableConsumer {
-    val clazzLoader: ClassLoader
-
     /**
      * Register a listener with the server.
      *
@@ -222,7 +220,5 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
      *
      * @return the class loader
      */
-    fun getClassloader(): ClassLoader {
-        return clazzLoader
-    }
+    val clazzLoader: ClassLoader
 }
