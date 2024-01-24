@@ -13,9 +13,9 @@ project.ext.set("name", "helper")
 dependencies {
     /* internal */
 
-    val shadowVersion = "1.20.1"
-    compileOnlyApi("me.lucko", "shadow-bukkit", shadowVersion)
-    implementation("me.lucko", "shadow-bukkit", shadowVersion)
+    val shadowVersion = "1.20.4"
+    compileOnlyApi("cc.mewcraft", "shadow-bukkit", shadowVersion)
+    implementation("cc.mewcraft", "shadow-bukkit", shadowVersion)
     val mathVersion = "1.0.3"
     compileOnlyApi("com.flowpowered", "flow-math", mathVersion)
     implementation("com.flowpowered", "flow-math", mathVersion)
