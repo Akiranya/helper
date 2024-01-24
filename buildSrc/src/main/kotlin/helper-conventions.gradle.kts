@@ -1,3 +1,5 @@
+import kotlin.io.path.Path
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
@@ -22,6 +24,8 @@ dependencies {
 repositories {
     mavenLocal()
     mavenCentral()
+
+    maven(uri("$userHome/MewcraftRepository"))
 
     maven {
         name = "lucko"
@@ -186,16 +190,9 @@ tasks {
     register<Task>("deployJar") {
         group = "mewcraft"
         doLast {
-            exec { commandLine("rsync", finalJarPath.value, "dev:data/dev/jar") }
+            if (file(inputJarPath).exists()) {
+                exec { commandLine("rsync", finalJarPath.value, "dev:data/dev/jar") }
+            }
         }
-    }
-    register<Task>("deployJarFresh") {
-        group = "mewcraft"
-        dependsOn(build)
-        finalizedBy(named("deployJar"))
-    }
-
-    build {
-        finalizedBy("copyJar")
     }
 }

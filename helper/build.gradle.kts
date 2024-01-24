@@ -27,15 +27,12 @@ dependencies {
         exclude("com.google.inject", "guice") // we don't use Guice extras
     }
     implementation("org.spongepowered", "configurate-yaml", configurateVersion) {
-        exclude("org.spongepowered", "configurate-core")
         exclude("org.yaml", "snakeyaml") // provided by Paper JAR
     }
     implementation("org.spongepowered", "configurate-gson", configurateVersion) {
-        exclude("org.spongepowered", "configurate-core")
         exclude("com.google.code.gson", "gson") // provided by Paper JAR
     }
     implementation("org.spongepowered", "configurate-hocon", configurateVersion) {
-        exclude("org.spongepowered", "configurate-core")
         exclude("com.typesafe", "config") // provided by Kotlin JAR
     }
     implementation("net.kyori", "event-api", "3.0.0") {
@@ -88,15 +85,6 @@ tasks {
         relocate("net.kyori.event", "me.lucko.helper.eventbus")
         relocate("ninja.leaping.configurate", "me.lucko.helper.config")
         // 特意不 relocate MCCoroutine 因为 consumers 会直接 join 该 JAR 的 classpath
-    }
-
-    // to fix org.gradle.internal.execution.WorkValidationException
-    // TODO better solution?
-    named("copyJar") {
-        mustRunAfter(project(":helper-mongo").tasks.build)
-        mustRunAfter(project(":helper-profiles").tasks.build)
-        mustRunAfter(project(":helper-redis").tasks.build)
-        mustRunAfter(project(":helper-sql").tasks.build)
     }
 }
 
