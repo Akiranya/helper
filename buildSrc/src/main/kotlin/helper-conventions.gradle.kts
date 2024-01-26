@@ -1,5 +1,3 @@
-import kotlin.io.path.Path
-
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
