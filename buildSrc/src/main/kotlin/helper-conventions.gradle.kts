@@ -181,14 +181,16 @@ tasks {
 
     register<Copy>("copyJar") {
         group = "mewcraft"
+        dependsOn(build)
         from(inputJarPath.value)
         into(layout.buildDirectory)
         rename("(?i)${project.name}.*\\.jar", finalJarName.value)
     }
     register<Task>("deployJar") {
         group = "mewcraft"
+        dependsOn(named("copyJar"))
         doLast {
-            if (file(inputJarPath).exists()) {
+            if (file(inputJarPath.value).exists()) {
                 exec { commandLine("rsync", finalJarPath.value, "dev:data/dev/jar") }
             }
         }
