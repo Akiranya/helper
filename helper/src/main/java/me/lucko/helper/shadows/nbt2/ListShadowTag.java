@@ -11,6 +11,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @NmsClassTarget("nbt.NBTTagList")
@@ -22,7 +23,8 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
     }
 
     static ListShadowTag create(List<ShadowTag> list, ShadowTagType type) {
-        return BukkitShadowFactory.global().constructShadow(ListShadowTag.class, list, type.id());
+        List<Object> unwrap = list.stream().map(Objects.requireNonNull(Shadow::getShadowTarget)).toList(); // unwrap
+        return BukkitShadowFactory.global().constructShadow(ListShadowTag.class, unwrap, type.id());
     }
 
     @ObfuscatedTarget({
