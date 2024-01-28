@@ -23,9 +23,9 @@
  *  SOFTWARE.
  */
 
-package me.lucko.helper.nbt2;
+package me.lucko.helper.nbt;
 
-import me.lucko.helper.shadows.nbt2.*;
+import me.lucko.helper.shadows.nbt.*;
 
 /**
  * An enumeration of NBT tag types.

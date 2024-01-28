@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt2;
+package me.lucko.helper.shadows.nbt;
 
 import me.lucko.shadow.Field;
 import me.lucko.shadow.Shadow;

@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt2;
+package me.lucko.helper.shadows.nbt;
 
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.Static;
@@ -10,23 +10,18 @@ import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@NmsClassTarget("nbt.NBTTagString")
+@NmsClassTarget("nbt.NBTTagShort")
 @DefaultQualifier(NonNull.class)
-public interface StringShadowTag extends Shadow, ShadowTag {
+public interface ShortShadowTag extends Shadow, ShadowTag, NumberShadowTag {
 
-    static StringShadowTag valueOf(String value) {
-        return BukkitShadowFactory.global().staticShadow(StringShadowTag.class).stringValueOf(value);
+    static ShortShadowTag valueOf(short value) {
+        return BukkitShadowFactory.global().staticShadow(ShortShadowTag.class).shortValueOf(value);
     }
 
     @Static
     @ObfuscatedTarget({
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
-    StringShadowTag stringValueOf(String value);
-
-    @ObfuscatedTarget({
-            @Mapping(value = "t_", version = PackageVersion.v1_20_R3)
-    })
-    String value();
+    ShortShadowTag shortValueOf(short value);
 
 }

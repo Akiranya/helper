@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt2;
+package me.lucko.helper.shadows.nbt;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;

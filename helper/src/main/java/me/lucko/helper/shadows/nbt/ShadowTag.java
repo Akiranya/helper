@@ -1,6 +1,6 @@
-package me.lucko.helper.shadows.nbt2;
+package me.lucko.helper.shadows.nbt;
 
-import me.lucko.helper.nbt2.ShadowTagType;
+import me.lucko.helper.nbt.ShadowTagType;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
