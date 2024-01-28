@@ -6,10 +6,13 @@ import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
 import me.lucko.shadow.bukkit.PackageVersion;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.util.List;
 
 @NmsClassTarget("nbt.NBTTagLongArray")
+@DefaultQualifier(NonNull.class)
 public interface LongArrayShadowTag extends CollectionShadowTag<LongShadowTag> {
 
 

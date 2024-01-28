@@ -7,12 +7,16 @@ import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
 import me.lucko.shadow.bukkit.PackageVersion;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.util.Set;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
 @NmsClassTarget("nbt.NBTTagCompound")
+@DefaultQualifier(NonNull.class)
 public interface CompoundShadowTag extends Shadow, ShadowTag {
 
     static CompoundShadowTag create() {
@@ -37,7 +41,7 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     @ObfuscatedTarget({
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
-    ShadowTag put(String key, ShadowTag value);
+    @Nullable ShadowTag put(String key, ShadowTag value);
 
     @ObfuscatedTarget({
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
@@ -102,7 +106,7 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     @ObfuscatedTarget({
             @Mapping(value = "c", version = PackageVersion.v1_20_R3)
     })
-    ShadowTag get(String key);
+    @Nullable ShadowTag get(String key);
 
     @ObfuscatedTarget({
             @Mapping(value = "d", version = PackageVersion.v1_20_R3)
@@ -143,6 +147,9 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     })
     long getLong(String key);
 
+    /**
+     * You must use {@link #hasUUID(String)} before or else it <b>will</b> throw an NPE.
+     */
     @ObfuscatedTarget({
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })

@@ -8,9 +8,12 @@ import me.lucko.shadow.bukkit.PackageVersion;
 
 import java.util.Collection;
 import java.util.List;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 
 @SuppressWarnings("unused")
 public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, ShadowTag, Iterable<T>, Collection<T>, List<T> {
+@DefaultQualifier(NonNull.class)
 
     @ObfuscatedTarget({
             @Mapping(value = "d", version = PackageVersion.v1_20_R3),

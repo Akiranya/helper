@@ -6,12 +6,15 @@ import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
 import me.lucko.shadow.bukkit.PackageVersion;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.io.DataOutput;
 import java.io.IOException;
 
 @SuppressWarnings("unused")
 @NmsClassTarget("nbt.NBTBase")
+@DefaultQualifier(NonNull.class)
 public interface ShadowTag extends Shadow {
 
     @ObfuscatedTarget({

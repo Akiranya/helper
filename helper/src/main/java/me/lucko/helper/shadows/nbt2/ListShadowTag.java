@@ -7,11 +7,14 @@ import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
 import me.lucko.shadow.bukkit.PackageVersion;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
 @NmsClassTarget("nbt.NBTTagList")
+@DefaultQualifier(NonNull.class)
 public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
 
     static ListShadowTag create() {
