@@ -25,42 +25,28 @@
 
 package me.lucko.helper.nbt;
 
-import me.lucko.helper.shadows.nbt.NBTBase;
-import me.lucko.helper.shadows.nbt.NBTNumber;
-import me.lucko.helper.shadows.nbt.NBTTagByte;
-import me.lucko.helper.shadows.nbt.NBTTagByteArray;
-import me.lucko.helper.shadows.nbt.NBTTagCompound;
-import me.lucko.helper.shadows.nbt.NBTTagDouble;
-import me.lucko.helper.shadows.nbt.NBTTagEnd;
-import me.lucko.helper.shadows.nbt.NBTTagFloat;
-import me.lucko.helper.shadows.nbt.NBTTagInt;
-import me.lucko.helper.shadows.nbt.NBTTagIntArray;
-import me.lucko.helper.shadows.nbt.NBTTagList;
-import me.lucko.helper.shadows.nbt.NBTTagLong;
-import me.lucko.helper.shadows.nbt.NBTTagLongArray;
-import me.lucko.helper.shadows.nbt.NBTTagShort;
-import me.lucko.helper.shadows.nbt.NBTTagString;
+import me.lucko.helper.shadows.nbt.*;
 
 /**
  * An enumeration of NBT tag types.
  */
-public enum NBTTagType {
+public enum ShadowTagType {
 
-    END(NBTTagEnd.class, (byte) 0),
-    BYTE(NBTTagByte.class, (byte) 1, true),
-    SHORT(NBTTagShort.class, (byte) 2, true),
-    INT(NBTTagInt.class, (byte) 3, true),
-    LONG(NBTTagLong.class, (byte) 4, true),
-    FLOAT(NBTTagFloat.class, (byte) 5, true),
-    DOUBLE(NBTTagDouble.class, (byte) 6, true),
-    BYTE_ARRAY(NBTTagByteArray.class, (byte) 7),
-    STRING(NBTTagString.class, (byte) 8),
-    LIST(NBTTagList.class, (byte) 9),
-    COMPOUND(NBTTagCompound.class, (byte) 10),
-    INT_ARRAY(NBTTagIntArray.class, (byte) 11),
-    LONG_ARRAY(NBTTagLongArray.class, (byte) 12);
+    END(EndShadowTag.class, (byte) 0),
+    BYTE(ByteShadowTag.class, (byte) 1, true),
+    SHORT(ShortShadowTag.class, (byte) 2, true),
+    INT(IntShadowTag.class, (byte) 3, true),
+    LONG(LongShadowTag.class, (byte) 4, true),
+    FLOAT(FloatShadowTag.class, (byte) 5, true),
+    DOUBLE(DoubleShadowTag.class, (byte) 6, true),
+    BYTE_ARRAY(ByteArrayShadowTag.class, (byte) 7),
+    STRING(StringShadowTag.class, (byte) 8),
+    LIST(ListShadowTag.class, (byte) 9),
+    COMPOUND(CompoundShadowTag.class, (byte) 10),
+    INT_ARRAY(IntArrayShadowTag.class, (byte) 11),
+    LONG_ARRAY(LongArrayShadowTag.class, (byte) 12);
 
-    private static final NBTTagType[] TYPES = values();
+    private static final ShadowTagType[] TYPES = values();
 
     /**
      * Gets the tag type for the specified id.
@@ -69,11 +55,11 @@ public enum NBTTagType {
      * @return the tag type
      * @throws ArrayIndexOutOfBoundsException if the id is not without bounds
      */
-    public static NBTTagType of(final byte id) {
+    public static ShadowTagType of(final byte id) {
         return TYPES[id];
     }
 
-    private final Class<? extends NBTBase> shadowClass;
+    private final Class<? extends ShadowTag> shadowClass;
 
     /**
      * The byte id of this tag type.
@@ -81,15 +67,15 @@ public enum NBTTagType {
     private final byte id;
 
     /**
-     * If this tag type is a {@link NBTNumber number} type.
+     * If this tag type is a {@link NumberShadowTag number} type.
      */
     private final boolean number;
 
-    NBTTagType(Class<? extends NBTBase> shadowClass, byte id) {
+    ShadowTagType(Class<? extends ShadowTag> shadowClass, byte id) {
         this(shadowClass, id, false);
     }
 
-    NBTTagType(Class<? extends NBTBase> shadowClass, byte id, boolean number) {
+    ShadowTagType(Class<? extends ShadowTag> shadowClass, byte id, boolean number) {
         this.shadowClass = shadowClass;
         this.id = id;
         this.number = number;
@@ -100,7 +86,7 @@ public enum NBTTagType {
      *
      * @return the shadow class
      */
-    public Class<? extends NBTBase> shadowClass() {
+    public Class<? extends ShadowTag> shadowClass() {
         return this.shadowClass;
     }
 
@@ -114,7 +100,7 @@ public enum NBTTagType {
     }
 
     /**
-     * Checks if this tag type is a {@link NBTNumber number} type.
+     * Checks if this tag type is a {@link NumberShadowTag number} type.
      *
      * @return {@code true} if a number type, {@code false} if not
      */

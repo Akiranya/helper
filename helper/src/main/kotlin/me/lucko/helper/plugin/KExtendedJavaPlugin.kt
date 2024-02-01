@@ -205,7 +205,7 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
         requireNonNull(name, "name")
         val targetFile = getRelativeFile(name)
         if (overwrite || !targetFile.exists()) {
-            ResourceExtractor.copyResourceRecursively(classLoader.getResource(name), targetFile)
+            ResourceExtractor.copyResourceRecursively(clazzLoader.getResource(name), targetFile)
         }
     }
 

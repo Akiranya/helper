@@ -25,42 +25,43 @@
 
 package me.lucko.helper.nbt;
 
-import me.lucko.helper.shadows.nbt.MojangsonParser;
-import me.lucko.helper.shadows.nbt.NBTBase;
-import me.lucko.helper.shadows.nbt.NBTTagCompound;
-import me.lucko.shadow.ShadowFactory;
+import me.lucko.helper.shadows.nbt.CompoundShadowTag;
+import me.lucko.helper.shadows.nbt.ShadowTag;
+import me.lucko.helper.shadows.nbt.ShadowTagParser;
+import me.lucko.shadow.bukkit.BukkitShadowFactory;
 
 /**
  * Utilities for working with NBT shadows.
  */
-public final class NBT {
+public final class ShadowTags {
 
-    private static MojangsonParser parser = null;
+    private static ShadowTagParser parser = null;
 
-    private static MojangsonParser parser() {
+    private static ShadowTagParser parser() {
         // harmless race
         if (parser == null) {
-            return parser = ShadowFactory.global().staticShadow(MojangsonParser.class);
+            // must use BukkitShadowFactory for the Bukkit-specialized target resolvers
+            return parser = BukkitShadowFactory.global().staticShadow(ShadowTagParser.class);
         }
         return parser;
     }
 
-    public static NBTBase shadow(Object nbtObject) {
+    public static ShadowTag shadow(Object tagObject) {
         // first, shadow as a NBTBase
-        NBTBase shadow = ShadowFactory.global().shadow(NBTBase.class, nbtObject);
+        ShadowTag shadow = BukkitShadowFactory.global().shadow(ShadowTag.class, tagObject);
 
         // extract the tag's type
-        NBTTagType type = shadow.getType();
-        Class<? extends NBTBase> realClass = type.shadowClass();
+        ShadowTagType type = shadow.getType();
+        Class<? extends ShadowTag> realClass = type.shadowClass();
 
         // return a shadow instance for the actual type
-        return ShadowFactory.global().shadow(realClass, nbtObject);
+        return BukkitShadowFactory.global().shadow(realClass, tagObject);
     }
 
-    public static NBTTagCompound parse(String s) {
-        return parser().parse(s);
+    public static CompoundShadowTag parse(String s) {
+        return parser().parseTag(s);
     }
 
-    private NBT() {}
+    private ShadowTags() {}
 
 }
