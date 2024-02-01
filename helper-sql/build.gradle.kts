@@ -14,7 +14,7 @@ dependencies {
     implementation("com.zaxxer", "HikariCP", "5.1.0") {
         exclude("org.slf4j", "slf4j-api")
     }
-    // runtimeOnly("com.mysql", "mysql-connector-j", "8.2.0") // Paper 的 runtime 已经包含该依赖
+    // runtimeOnly("com.mysql", "mysql-connector-j", "8.2.0") // Paper Runtime 已经包含该依赖
     compileOnly(project(":helper"))
 }
 
@@ -26,7 +26,6 @@ tasks {
         exclude("/google/**")
 
         val shadePattern = "me.lucko.helper.sql.external."
-        relocate("com.mysql", shadePattern + "mysql")
         relocate("com.zaxxer.hikari", shadePattern + "hikari")
         relocate("com.google.protobuf", shadePattern + "protobuf")
         relocate("be.bendem.sqlstreams", "me.lucko.helper.sql.streams")
