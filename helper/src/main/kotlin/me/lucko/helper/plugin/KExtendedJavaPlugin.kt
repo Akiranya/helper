@@ -25,6 +25,7 @@
 package me.lucko.helper.plugin
 
 import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
+import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import me.lucko.helper.Schedulers
 import me.lucko.helper.Services
 import me.lucko.helper.config.ConfigFactory
@@ -111,6 +112,18 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
     override fun <T : Listener> registerTerminableListener(listener: T): TerminableListener<T> {
         requireNonNull(listener, "listener")
         server.pluginManager.registerEvents(listener, this)
+        return TerminableListener(listener)
+    }
+
+    override fun <T : Listener> registerSuspendListener(listener: T): T {
+        requireNonNull(listener, "listener")
+        server.pluginManager.registerSuspendingEvents(listener, this)
+        return listener
+    }
+
+    override fun <T : Listener> registerTerminableSuspendListener(listener: T): TerminableListener<T> {
+        requireNonNull(listener, "listener")
+        server.pluginManager.registerSuspendingEvents(listener, this)
         return TerminableListener(listener)
     }
 

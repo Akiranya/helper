@@ -61,6 +61,31 @@ interface KHelperPlugin : Plugin, TerminableConsumer {
     fun <T : Listener> registerTerminableListener(listener: T): TerminableListener<T>
 
     /**
+     * Register a suspending listener with the server.
+     *
+     * [me.lucko.helper.Events] should be used instead of this method in most
+     * cases.
+     *
+     * @param listener the listener to register
+     * @param <T> the listener class type
+     * @return the listener
+     */
+    fun <T : Listener> registerSuspendListener(@Nonnull listener: T): T
+
+    /**
+     * Register a suspending listener with the server.
+     *
+     * The return value is a [TerminableListener] that wraps the listener in
+     * it. The [TerminableListener] will automatically unregister the listener
+     * when closed.
+     *
+     * @param listener the listener to register
+     * @param <T> the listener class type
+     * @return the listener
+     */
+    fun <T : Listener> registerTerminableSuspendListener(listener: T): TerminableListener<T>
+
+    /**
      * Registers a CommandExecutor with the server
      *
      * @param command the command instance
