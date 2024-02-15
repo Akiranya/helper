@@ -2,6 +2,7 @@ package me.lucko.helper.shadows.nbt;
 
 import me.lucko.helper.nbt.ShadowTagType;
 import me.lucko.shadow.Shadow;
+import me.lucko.shadow.ShadowingStrategy;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
@@ -106,6 +107,7 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     @ObfuscatedTarget({
             @Mapping(value = "c", version = PackageVersion.v1_20_R3)
     })
+    @ShadowingStrategy(wrapper = NbtShadowingStrategy.SingleWrapper.class)
     @Nullable ShadowTag get(String key);
 
     @ObfuscatedTarget({

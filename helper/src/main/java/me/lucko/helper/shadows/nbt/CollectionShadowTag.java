@@ -4,14 +4,12 @@ import me.lucko.helper.nbt.ShadowTagType;
 import me.lucko.helper.nbt.ShadowTags;
 import me.lucko.shadow.Field;
 import me.lucko.shadow.Shadow;
-import me.lucko.shadow.ShadowFactory;
 import me.lucko.shadow.ShadowingStrategy;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
 import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.util.Iterator;
@@ -71,7 +69,7 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     // We must explicitly specify shadow strategy for this method,
     // otherwise it's always effectively shadowed as plain ShadowTag.
     // Consequently, we can't cast T to any subclasses of ShadowTag.
-    @ShadowingStrategy(wrapper = ForShadowNbt0.class)
+    @ShadowingStrategy(wrapper = NbtShadowingStrategy.SingleWrapper.class)
     T get(int index);
 
     boolean contains(T e);
@@ -79,14 +77,6 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     boolean remove(T e);
 
     int size();
-
-    enum ForShadowNbt0 implements ShadowingStrategy.Wrapper {
-        INSTANCE;
-
-        @Override public Object wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
-            return ShadowTags.shadow(unwrapped);
-        }
-    }
 
     //////
 
@@ -96,19 +86,8 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     @ObfuscatedTarget({
             @Mapping(value = "c", version = PackageVersion.v1_20_R3)
     })
-    @ShadowingStrategy(wrapper = ForShadowNbt1.class)
+    @ShadowingStrategy(wrapper = NbtShadowingStrategy.ListWrapper.class)
     List<T> getBackingList();
-
-    @SuppressWarnings("unchecked")
-    enum ForShadowNbt1 implements ShadowingStrategy.Wrapper {
-        INSTANCE;
-
-        @Override public Object wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
-            Objects.requireNonNull(unwrapped);
-            List<Object> listTag = (List<Object>) unwrapped;
-            return listTag.stream().map(ShadowTags::shadow).toList();
-        }
-    }
 
     // Side note: These methods are not obfuscated, so we don't specify the targets
 
