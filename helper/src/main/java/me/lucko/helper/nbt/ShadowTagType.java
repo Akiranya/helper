@@ -44,7 +44,8 @@ public enum ShadowTagType {
     LIST(ListShadowTag.class, (byte) 9),
     COMPOUND(CompoundShadowTag.class, (byte) 10),
     INT_ARRAY(IntArrayShadowTag.class, (byte) 11),
-    LONG_ARRAY(LongArrayShadowTag.class, (byte) 12);
+    LONG_ARRAY(LongArrayShadowTag.class, (byte) 12),
+    ANY_NUMERIC(NumberShadowTag.class, (byte) 99, true);
 
     private static final ShadowTagType[] TYPES = values();
 

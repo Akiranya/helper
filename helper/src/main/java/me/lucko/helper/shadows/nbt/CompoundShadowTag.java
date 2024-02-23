@@ -126,7 +126,7 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     boolean contains(String key, int type);
 
     default boolean contains(String key, ShadowTagType type) {
-        return contains(key, type.id());
+        return contains(key, type.number() ? ShadowTagType.ANY_NUMERIC.id() : type.id());
     }
 
     @ObfuscatedTarget({

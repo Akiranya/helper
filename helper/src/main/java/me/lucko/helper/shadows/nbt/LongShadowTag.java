@@ -12,7 +12,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.NBTTagLong")
 @DefaultQualifier(NonNull.class)
-public interface LongShadowTag extends Shadow, ShadowTag, NumberShadowTag {
+public interface LongShadowTag extends Shadow, NumberShadowTag {
 
     static LongShadowTag valueOf(long value) {
         return BukkitShadowFactory.global().staticShadow(LongShadowTag.class).longValueOf(value);

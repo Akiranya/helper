@@ -12,7 +12,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.NBTTagDouble")
 @DefaultQualifier(NonNull.class)
-public interface DoubleShadowTag extends Shadow, ShadowTag, NumberShadowTag {
+public interface DoubleShadowTag extends Shadow, NumberShadowTag {
 
     static DoubleShadowTag valueOf(double value) {
         return BukkitShadowFactory.global().staticShadow(DoubleShadowTag.class).doubleValueOf(value);

@@ -10,7 +10,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 @SuppressWarnings("unused")
 @NmsClassTarget("nbt.NBTNumber")
 @DefaultQualifier(NonNull.class)
-public interface NumberShadowTag {
+public interface NumberShadowTag extends ShadowTag {
 
     @ObfuscatedTarget({
             @Mapping(value = "f", version = PackageVersion.v1_20_R3)

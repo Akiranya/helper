@@ -12,7 +12,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.NBTTagByte")
 @DefaultQualifier(NonNull.class)
-public interface ByteShadowTag extends Shadow, ShadowTag, NumberShadowTag {
+public interface ByteShadowTag extends Shadow, NumberShadowTag {
 
     static ByteShadowTag valueOf(byte value) {
         return BukkitShadowFactory.global().staticShadow(ByteShadowTag.class).byteValueOf(value);

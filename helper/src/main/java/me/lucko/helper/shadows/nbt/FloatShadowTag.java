@@ -12,7 +12,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.NBTTagFloat")
 @DefaultQualifier(NonNull.class)
-public interface FloatShadowTag extends Shadow, ShadowTag, NumberShadowTag {
+public interface FloatShadowTag extends Shadow, NumberShadowTag {
 
     static FloatShadowTag valueOf(float value) {
         return BukkitShadowFactory.global().staticShadow(FloatShadowTag.class).floatValueOf(value);
