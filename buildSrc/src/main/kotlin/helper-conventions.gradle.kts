@@ -10,11 +10,6 @@ plugins {
 
 group = "me.lucko"
 
-val userHome: String = when {
-    System.getProperty("os.name").startsWith("Windows", ignoreCase = true) -> System.getenv("USERPROFILE")
-    else -> System.getenv("HOME")
-}
-
 dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.20.4-R0.1-SNAPSHOT")
 }
@@ -23,7 +18,7 @@ repositories {
     mavenLocal()
     mavenCentral()
 
-    maven(uri("$userHome/MewcraftRepository"))
+    maven(uri("${System.getProperty("user.home")}/MewcraftRepository"))
 
     maven {
         name = "lucko"
@@ -70,18 +65,13 @@ kotlin {
                     - implementation = Kotlin JAR 未提供运行时，因此不仅需要编译时依赖，还需要打包进 JAR
                 */
                 compileOnly(kotlin("stdlib"))
-                compileOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.2")
+                compileOnly(kotlin("reflect"))
                 compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
+                    exclude("com.google.guava")
                     exclude("org.jetbrains.kotlin")
                     exclude("org.jetbrains.kotlinx")
-                    exclude("com.google.guava", "guava")
                 }
-                compileOnly("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
-                compileOnly("org.jetbrains.kotlinx:atomicfu:0.23.1")
             }
         }
 
@@ -96,9 +86,7 @@ kotlin {
 
 publishing {
     repositories {
-        maven {
-            url = uri("$userHome/MewcraftRepository")
-        }
+        maven(uri("${System.getProperty("user.home")}/MewcraftRepository"))
     }
 
     publications {
