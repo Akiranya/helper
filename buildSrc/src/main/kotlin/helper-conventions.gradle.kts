@@ -72,6 +72,7 @@ kotlin {
                     exclude("org.jetbrains.kotlin")
                     exclude("org.jetbrains.kotlinx")
                 }
+                compileOnly("org.jetbrains.kotlinx:atomicfu:0.23.1")
             }
         }
 
@@ -79,6 +80,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                implementation("org.jetbrains.kotlinx:atomicfu:0.23.1")
             }
         }
     }
