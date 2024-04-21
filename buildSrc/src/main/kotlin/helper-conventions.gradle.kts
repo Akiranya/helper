@@ -101,15 +101,6 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-
-            // Exclude shadowRuntimeElements from the artifacts
-            with(components["java"] as AdhocComponentWithVariants) {
-                withVariantsFromConfiguration(
-                    configurations["shadowRuntimeElements"]
-                ) {
-                    skip()
-                }
-            }
         }
     }
 }
