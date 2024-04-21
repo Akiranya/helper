@@ -172,23 +172,15 @@ tasks {
 
     ////// deploy //////
 
-    val inputJarPath = lazy { shadowJar.get().archiveFile.get().asFile.absolutePath }
-    val finalJarName = lazy { "${ext.get("name")}-${project.version}.jar" }
-    val finalJarPath = lazy { layout.buildDirectory.file(finalJarName.value).get().asFile.absolutePath }
+    val inputJarPath by lazy { shadowJar.get().archiveFile.get().asFile.absolutePath }
+    val finalJarPath by lazy { layout.buildDirectory.file(inputJarPath).get().asFile.absolutePath }
 
-    register<Copy>("copyJar") {
-        group = "mewcraft"
-        dependsOn(build)
-        from(inputJarPath.value)
-        into(layout.buildDirectory)
-        rename("(?i)${project.name}.*\\.jar", finalJarName.value)
-    }
     register<Task>("deployJar") {
         group = "nyaadanbou"
         dependsOn(build)
         doLast {
-            if (file(inputJarPath.value).exists()) {
-                exec { commandLine("rsync", finalJarPath.value, "dev:data/dev/jar") }
+            if (file(inputJarPath).exists()) {
+                exec { commandLine("rsync", inputJarPath, "dev:data/dev/jar") }
             }
         }
     }
