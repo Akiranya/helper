@@ -6,7 +6,7 @@ plugins {
     id("net.minecrell.plugin-yml.paper") version ("0.6.0")
 }
 
-version = "5.6.14"
+version = "5.6.15"
 description = "A utility to reduce boilerplate code in Bukkit plugins."
 project.ext.set("name", "helper")
 
