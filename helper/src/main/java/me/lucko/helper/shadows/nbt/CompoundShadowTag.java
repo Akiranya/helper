@@ -26,11 +26,13 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
         return BukkitShadowFactory.global().constructShadow(CompoundShadowTag.class);
     }
 
-    @Field
-    @ShadowingStrategy(wrapper = NbtShadowingStrategy.UnsafeMutableMapWrapper.class)
+    @ShadowingStrategy(
+            wrapper = NbtShadowingStrategy.UnsafeMutableMapWrapper.class
+    )
     @ObfuscatedTarget({
             @Mapping(value = "x", version = PackageVersion.v1_20_R3)
     })
+    @Field
     Map<Object, Object> tags();
 
     @ObfuscatedTarget({
@@ -116,7 +118,9 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     @ObfuscatedTarget({
             @Mapping(value = "c", version = PackageVersion.v1_20_R3)
     })
-    @ShadowingStrategy(wrapper = NbtShadowingStrategy.SingleWrapper.class)
+    @ShadowingStrategy(
+            wrapper = NbtShadowingStrategy.SingleWrapper.class
+    )
     @Nullable ShadowTag get(String key);
 
     @ObfuscatedTarget({

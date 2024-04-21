@@ -24,20 +24,23 @@ import java.util.function.Consumer;
 @DefaultQualifier(NonNull.class)
 public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, ShadowTag, Iterable<T> {
 
+    // the NMS explicitly overrides java.util.AbstractList
     @ObfuscatedTarget({
             @Mapping(value = "d", version = PackageVersion.v1_20_R3),
     })
-    T set(int i, T tag); // the NMS explicitly overrides java.util.AbstractList
+    T set(int i, T tag);
 
+    // the NMS explicitly overrides java.util.AbstractList
     @ObfuscatedTarget({
             @Mapping(value = "c", version = PackageVersion.v1_20_R3),
     })
-    void add(int i, T tag); // the NMS explicitly overrides java.util.AbstractList
+    void add(int i, T tag);
 
+    // the NMS explicitly overrides java.util.AbstractList
     @ObfuscatedTarget({
             @Mapping(value = "c", version = PackageVersion.v1_20_R3),
     })
-    T remove(int i); // the NMS explicitly overrides java.util.AbstractList
+    T remove(int i);
 
     @ObfuscatedTarget({
             @Mapping(value = "a", version = PackageVersion.v1_20_R3),
@@ -58,18 +61,24 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
         return ShadowTagType.of(elementTypeId());
     }
 
-    // TODO create full proxies for java.util.AbstractList
+    @ObfuscatedTarget({
+            @Mapping(value = "c", version = PackageVersion.v1_20_R3)
+    })
+    @ShadowingStrategy(
+            wrapper = NbtShadowingStrategy.ImmutableListTagWrapper.class
+    )
+    @Field
+    List<T> backingList();
 
-    ////// We explicitly override some basic methods of java.util.AbstractList
-
-    // Side note: These methods are not obfuscated, so we don't specify the targets
-
+    //<editor-fold desc="AbstractList Proxies">
     boolean add(T e);
 
     // We must explicitly specify shadow strategy for this method,
     // otherwise it's always effectively shadowed as plain ShadowTag.
     // Consequently, we can't cast T to any subclasses of ShadowTag.
-    @ShadowingStrategy(wrapper = NbtShadowingStrategy.SingleWrapper.class)
+    @ShadowingStrategy(
+            wrapper = NbtShadowingStrategy.SingleWrapper.class
+    )
     T get(int index);
 
     boolean contains(T e);
@@ -77,20 +86,9 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     boolean remove(T e);
 
     int size();
+    //</editor-fold>
 
-    //////
-
-    ////// We explicitly override the java.lang.Iterable interface
-
-    @Field
-    @ObfuscatedTarget({
-            @Mapping(value = "c", version = PackageVersion.v1_20_R3)
-    })
-    @ShadowingStrategy(wrapper = NbtShadowingStrategy.ImmutableListTagWrapper.class)
-    List<T> getBackingList();
-
-    // Side note: These methods are not obfuscated, so we don't specify the targets
-
+    //<editor-fold desc="Iterator Proxies">
     @SuppressWarnings("unchecked")
     @Override default Iterator<T> iterator() {
         final Object tag = Objects.requireNonNull(getShadowTarget());
@@ -114,9 +112,8 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     }
 
     @Override default Spliterator<T> spliterator() {
-        return Spliterators.spliterator(getBackingList(), Spliterator.ORDERED | Spliterator.IMMUTABLE);
+        return Spliterators.spliterator(backingList(), Spliterator.ORDERED | Spliterator.IMMUTABLE);
     }
-
-    //////
+    //</editor-fold>
 
 }
