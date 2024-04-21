@@ -89,7 +89,7 @@ kotlin {
 publishing {
     repositories {
         maven {
-            name = "mewcraftRepository"
+            name = "nyaadanbou"
             url = uri("https://repo.mewcraft.cc/releases/")
             credentials(PasswordCredentials::class)
             authentication {
@@ -184,8 +184,8 @@ tasks {
         rename("(?i)${project.name}.*\\.jar", finalJarName.value)
     }
     register<Task>("deployJar") {
-        group = "mewcraft"
-        dependsOn(named("copyJar"))
+        group = "nyaadanbou"
+        dependsOn(build)
         doLast {
             if (file(inputJarPath.value).exists()) {
                 exec { commandLine("rsync", finalJarPath.value, "dev:data/dev/jar") }
