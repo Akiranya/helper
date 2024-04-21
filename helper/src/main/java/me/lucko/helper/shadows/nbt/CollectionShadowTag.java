@@ -86,7 +86,7 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     @ObfuscatedTarget({
             @Mapping(value = "c", version = PackageVersion.v1_20_R3)
     })
-    @ShadowingStrategy(wrapper = NbtShadowingStrategy.ListWrapper.class)
+    @ShadowingStrategy(wrapper = NbtShadowingStrategy.ImmutableListTagWrapper.class)
     List<T> getBackingList();
 
     // Side note: These methods are not obfuscated, so we don't specify the targets

@@ -1,6 +1,7 @@
 package me.lucko.helper.shadows.nbt;
 
 import me.lucko.helper.nbt.ShadowTagType;
+import me.lucko.shadow.Field;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.ShadowingStrategy;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
@@ -12,6 +13,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,6 +25,13 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     static CompoundShadowTag create() {
         return BukkitShadowFactory.global().constructShadow(CompoundShadowTag.class);
     }
+
+    @Field
+    @ShadowingStrategy(wrapper = NbtShadowingStrategy.UnsafeMutableMapWrapper.class)
+    @ObfuscatedTarget({
+            @Mapping(value = "x", version = PackageVersion.v1_20_R3)
+    })
+    Map<Object, Object> tags();
 
     @ObfuscatedTarget({
             @Mapping(value = "e", version = PackageVersion.v1_20_R3)
