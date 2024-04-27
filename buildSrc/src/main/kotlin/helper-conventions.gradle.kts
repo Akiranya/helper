@@ -18,7 +18,10 @@ repositories {
     mavenLocal()
     mavenCentral()
 
-    maven(uri("${System.getProperty("user.home")}/MewcraftRepository"))
+    maven {
+        name = "nyaadanbou"
+        url = uri("https://repo.mewcraft.cc/releases/")
+    }
 
     maven {
         name = "lucko"
