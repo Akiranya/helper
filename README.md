@@ -65,3 +65,7 @@ I'm no longer actively working on further API additions, but the project is stil
 * [`JavaScript Plugins`](https://github.com/lucko/helper/wiki/helper-js:-Introduction) - javascript plugins using helper-js and Nashorn
 
 [`... and much more!`](https://github.com/lucko/helper/wiki/)
+
+## Requirements
+
+This plugin assumes that the server is running with `mojang mapping`.
