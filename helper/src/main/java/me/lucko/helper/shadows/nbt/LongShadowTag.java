@@ -10,7 +10,7 @@ import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@NmsClassTarget("nbt.NBTTagLong")
+@NmsClassTarget("nbt.LongTag")
 @DefaultQualifier(NonNull.class)
 public interface LongShadowTag extends Shadow, NumberShadowTag {
 
@@ -18,10 +18,11 @@ public interface LongShadowTag extends Shadow, NumberShadowTag {
         return BukkitShadowFactory.global().staticShadow(LongShadowTag.class).longValueOf(value);
     }
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "valueOf", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
+    @Static
     LongShadowTag longValueOf(long value);
 
 }

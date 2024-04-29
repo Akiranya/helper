@@ -9,21 +9,22 @@ import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@SuppressWarnings("unused")
-@NmsClassTarget("nbt.NBTReadLimiter")
+@NmsClassTarget("nbt.NbtAccounter")
 @DefaultQualifier(NonNull.class)
 public interface ShadowTagAccounter extends Shadow {
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "create", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
+    @Static
     ShadowTagAccounter create(long max);
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "unlimitedHeap", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
+    @Static
     ShadowTagAccounter unlimitedHeap();
 
 }

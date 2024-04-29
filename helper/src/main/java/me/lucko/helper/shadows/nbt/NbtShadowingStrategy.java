@@ -1,55 +1,99 @@
 package me.lucko.helper.shadows.nbt;
 
 import me.lucko.helper.nbt.ShadowTags;
+import me.lucko.shadow.Shadow;
 import me.lucko.shadow.ShadowFactory;
 import me.lucko.shadow.ShadowingStrategy;
+import me.lucko.shadow.bukkit.BukkitShadowFactory;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 interface NbtShadowingStrategy {
     /**
-     * A wrapper for a single NBT object.
+     * A wrapper/unwrapper for a single Tag object.
      */
-    enum SingleWrapper implements ShadowingStrategy.Wrapper {
+    enum ForShadowTags implements ShadowingStrategy.Wrapper, ShadowingStrategy.Unwrapper {
         INSTANCE;
 
         @Override public ShadowTag wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
-            Objects.requireNonNull(unwrapped);
+            if (unwrapped == null) {
+                return null;
+            }
+
             return ShadowTags.shadow(unwrapped);
         }
-    }
 
-    /**
-     * A wrapper for an <b>immutable</b> list of NBT object.
-     */
-    enum ImmutableListTagWrapper implements ShadowingStrategy.Wrapper {
-        INSTANCE;
+        @Override public @Nullable Object unwrap(@Nullable final Object wrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
+            if (wrapped instanceof final Shadow shadow) {
+                return shadow.getShadowTarget();
+            }
 
-        @SuppressWarnings("unchecked")
-        @Override public List<ShadowTag> wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
-            Objects.requireNonNull(unwrapped);
-            List<Object> listTag = (List<Object>) unwrapped;
-            return listTag.stream().map(ShadowTags::shadow).toList();
+            return wrapped;
+        }
+
+        @Override public @NonNull Class<?> unwrap(final Class<?> wrappedClass, @NonNull final ShadowFactory shadowFactory) {
+            return BukkitShadowFactory.global().targetClass(wrappedClass);
         }
     }
 
     /**
-     * A wrapper for an unsafe <b>mutable</b> map.
+     * A wrapper/unwrapper for a List of Tag objects.
      * <p>
-     * This is only intended to expose the typeless methods of the shadow map,
-     * such as {@link Map#clear()} and {@link Map#isEmpty()}.
+     * The shadow List is immutable. The shadow Tag in the List, however, is not.
      */
-    enum UnsafeMutableMapWrapper implements ShadowingStrategy.Wrapper {
+    @SuppressWarnings("unchecked")
+    enum ForImmutableListTags implements ShadowingStrategy.Wrapper, ShadowingStrategy.Unwrapper {
         INSTANCE;
 
-        @SuppressWarnings("unchecked")
+        @Override public List<ShadowTag> wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
+            if (unwrapped == null) {
+                return null;
+            }
+
+            List<Object> nmsListTag = (List<Object>) unwrapped;
+            List<ShadowTag> shadowListTag = nmsListTag.stream().map(ShadowTags::shadow).toList();
+            return shadowListTag;
+        }
+
+        @Override public @Nullable Object unwrap(@Nullable final Object wrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override public @NonNull Class<?> unwrap(final Class<?> wrappedClass, @NonNull final ShadowFactory shadowFactory) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
+     * A wrapper/unwrapper for a Map of Tag objects.
+     * <p>
+     * The shadow Map is a view of its shadow target - any changes on the shadow Map
+     * will reflect on its shadow target.
+     * <p>
+     * This shadowing strategy is only intended to expose the typeless methods of the shadow map,
+     * such as {@link Map#clear()} and {@link Map#isEmpty()}.
+     */
+    @SuppressWarnings("unchecked")
+    enum ForTypelessMaps implements ShadowingStrategy.Wrapper, ShadowingStrategy.Unwrapper {
+        INSTANCE;
+
         @Override public Map<Object, Object> wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
-            Objects.requireNonNull(unwrapped);
+            if (unwrapped == null) {
+                return null;
+            }
+
             return (Map<Object, Object>) unwrapped;
+        }
+
+        @Override public @Nullable Object unwrap(@Nullable final Object wrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override public @NonNull Class<?> unwrap(final Class<?> wrappedClass, @NonNull final ShadowFactory shadowFactory) {
+            throw new UnsupportedOperationException();
         }
     }
 }

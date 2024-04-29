@@ -13,21 +13,22 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-@SuppressWarnings("unused")
-@NmsClassTarget("nbt.NBTCompressedStreamTools")
+@NmsClassTarget("nbt.NbtIo")
 @DefaultQualifier(NonNull.class)
 public interface ShadowTagIO extends Shadow {
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "read", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3),
     })
+    @Static
     CompoundShadowTag read(DataInput input) throws IOException;
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "write", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3),
     })
+    @Static
     void write(CompoundShadowTag nbt, DataOutput output) throws IOException;
 
 }

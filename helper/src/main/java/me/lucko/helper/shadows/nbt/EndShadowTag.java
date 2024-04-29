@@ -3,6 +3,7 @@ package me.lucko.helper.shadows.nbt;
 import me.lucko.shadow.Field;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.Static;
+import me.lucko.shadow.Target;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
@@ -11,19 +12,21 @@ import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@NmsClassTarget("nbt.NBTTagEnd")
+@NmsClassTarget("nbt.EndTag")
 @DefaultQualifier(NonNull.class)
 public interface EndShadowTag extends Shadow, ShadowTag {
 
     static EndShadowTag instance() {
-        return BukkitShadowFactory.global().staticShadow(EndShadowTag.class).getInstance();
+        return BukkitShadowFactory.global().staticShadow(EndShadowTag.class).INSTANCE();
     }
 
-    @Static
-    @Field
     @ObfuscatedTarget({
+            @Mapping(value = "INSTANCE", version = PackageVersion.NONE),
             @Mapping(value = "b", version = PackageVersion.v1_20_R3)
     })
-    EndShadowTag getInstance();
+    @Static
+    @Field
+    @Target("INSTANCE")
+    EndShadowTag INSTANCE();
 
 }

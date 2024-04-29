@@ -13,8 +13,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("unused")
-@NmsClassTarget("nbt.NBTTagList")
+@NmsClassTarget("nbt.ListTag")
 @DefaultQualifier(NonNull.class)
 public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
 
@@ -28,46 +27,55 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
     }
 
     @ObfuscatedTarget({
+            @Mapping(value = "getCompound", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
     CompoundShadowTag getCompound(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getList", version = PackageVersion.NONE),
             @Mapping(value = "b", version = PackageVersion.v1_20_R3)
     })
     ListShadowTag getList(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getShort", version = PackageVersion.NONE),
             @Mapping(value = "d", version = PackageVersion.v1_20_R3)
     })
     short getShort(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getInt", version = PackageVersion.NONE),
             @Mapping(value = "e", version = PackageVersion.v1_20_R3)
     })
     int getInt(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getIntArray", version = PackageVersion.NONE),
             @Mapping(value = "f", version = PackageVersion.v1_20_R3)
     })
     int[] getIntArray(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getLongArray", version = PackageVersion.NONE),
             @Mapping(value = "g", version = PackageVersion.v1_20_R3)
     })
     long[] getLongArray(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getDouble", version = PackageVersion.NONE),
             @Mapping(value = "h", version = PackageVersion.v1_20_R3)
     })
     double getDouble(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getFloat", version = PackageVersion.NONE),
             @Mapping(value = "i", version = PackageVersion.v1_20_R3)
     })
     float getFloat(int index);
 
     @ObfuscatedTarget({
+            @Mapping(value = "getString", version = PackageVersion.NONE),
             @Mapping(value = "j", version = PackageVersion.v1_20_R3)
     })
     String getString(int index);

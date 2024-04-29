@@ -10,7 +10,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.util.List;
 
-@NmsClassTarget("nbt.NBTTagIntArray")
+@NmsClassTarget("nbt.IntArrayTag")
 @DefaultQualifier(NonNull.class)
 public interface IntArrayShadowTag extends CollectionShadowTag<IntShadowTag> {
 
@@ -25,6 +25,7 @@ public interface IntArrayShadowTag extends CollectionShadowTag<IntShadowTag> {
     }
 
     @ObfuscatedTarget({
+            @Mapping(value = "getAsIntArray", version = PackageVersion.NONE),
             @Mapping(value = "g", version = PackageVersion.v1_20_R3)
     })
     int[] value();

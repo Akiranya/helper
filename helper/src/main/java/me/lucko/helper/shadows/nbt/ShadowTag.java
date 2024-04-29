@@ -12,31 +12,34 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 import java.io.DataOutput;
 import java.io.IOException;
 
-@SuppressWarnings("unused")
-@NmsClassTarget("nbt.NBTBase")
+@NmsClassTarget("nbt.Tag")
 @DefaultQualifier(NonNull.class)
 public interface ShadowTag extends Shadow {
 
     @ObfuscatedTarget({
+            @Mapping(value = "write", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
     void write(DataOutput dataOutput) throws IOException;
 
     @ObfuscatedTarget({
+            @Mapping(value = "getId", version = PackageVersion.NONE),
             @Mapping(value = "b", version = PackageVersion.v1_20_R3)
     })
-    byte getId();
+    byte getTypeId();
 
     default ShadowTagType getType() {
-        return ShadowTagType.of(getId());
+        return ShadowTagType.of(getTypeId());
     }
 
     @ObfuscatedTarget({
+            @Mapping(value = "copy", version = PackageVersion.NONE),
             @Mapping(value = "d", version = PackageVersion.v1_20_R3)
     })
     ShadowTag copy();
 
     @ObfuscatedTarget({
+            @Mapping(value = "getAsString", version = PackageVersion.NONE),
             @Mapping(value = "t_", version = PackageVersion.v1_20_R3)
     })
     String asString();

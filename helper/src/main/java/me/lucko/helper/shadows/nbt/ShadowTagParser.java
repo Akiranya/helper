@@ -9,14 +9,15 @@ import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@NmsClassTarget("nbt.MojangsonParser")
+@NmsClassTarget("nbt.TagParser")
 @DefaultQualifier(NonNull.class)
 public interface ShadowTagParser extends Shadow {
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "parseTag", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
+    @Static
     CompoundShadowTag parseTag(String s);
 
 }

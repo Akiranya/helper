@@ -10,7 +10,7 @@ import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@NmsClassTarget("nbt.NBTTagByte")
+@NmsClassTarget("nbt.ByteTag")
 @DefaultQualifier(NonNull.class)
 public interface ByteShadowTag extends Shadow, NumberShadowTag {
 
@@ -22,16 +22,18 @@ public interface ByteShadowTag extends Shadow, NumberShadowTag {
         return BukkitShadowFactory.global().staticShadow(ByteShadowTag.class).byteValueOf(value);
     }
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "valueOf", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
+    @Static
     ByteShadowTag byteValueOf(byte value);
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "valueOf", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
+    @Static
     ByteShadowTag byteValueOf(boolean value);
 
 }

@@ -10,7 +10,7 @@ import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@NmsClassTarget("nbt.NBTTagFloat")
+@NmsClassTarget("nbt.FloatTag")
 @DefaultQualifier(NonNull.class)
 public interface FloatShadowTag extends Shadow, NumberShadowTag {
 
@@ -18,10 +18,11 @@ public interface FloatShadowTag extends Shadow, NumberShadowTag {
         return BukkitShadowFactory.global().staticShadow(FloatShadowTag.class).floatValueOf(value);
     }
 
-    @Static
     @ObfuscatedTarget({
+            @Mapping(value = "valueOf", version = PackageVersion.NONE),
             @Mapping(value = "a", version = PackageVersion.v1_20_R3)
     })
+    @Static
     FloatShadowTag floatValueOf(float value);
 
 }
