@@ -16,9 +16,9 @@ dependencies {
     val shadowVersion = "1.20.4"
     compileOnlyApi("cc.mewcraft", "shadow-bukkit", shadowVersion)
     implementation("cc.mewcraft", "shadow-bukkit", shadowVersion)
+    api("cc.mewcraft", "shadow-bukkit", shadowVersion)
     val mathVersion = "1.0.3"
-    compileOnlyApi("com.flowpowered", "flow-math", mathVersion)
-    implementation("com.flowpowered", "flow-math", mathVersion)
+    api("com.flowpowered", "flow-math", mathVersion)
     implementation("net.jodah", "expiringmap", "0.5.10")
     val configurateVersion = "3.7.3"
     implementation("org.spongepowered", "configurate-core", configurateVersion) {
@@ -42,11 +42,7 @@ dependencies {
     // MCCoroutine 的 SuspendingJavaPlugin class 在每个独立插件中必须存在一个独立的 instance
     // 这是因为 MCCoroutine 所提供的 coroutine scope 是与 SuspendingJavaPlugin instance 绑定的
     val mccoroutineVersion = "2.13.0"
-    compileOnlyApi("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-api", mccoroutineVersion) {
-        exclude("org.jetbrains.kotlin") // provided by Kotlin JAR
-        exclude("org.jetbrains.kotlinx") // provided by Kotlin JAR
-    }
-    implementation("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-api", mccoroutineVersion) {
+    api("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-api", mccoroutineVersion) {
         exclude("org.jetbrains.kotlin") // provided by Kotlin JAR
         exclude("org.jetbrains.kotlinx") // provided by Kotlin JAR
     }
