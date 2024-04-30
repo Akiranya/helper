@@ -1,11 +1,11 @@
 package me.lucko.helper.shadows.nbt;
 
+import cc.mewcraft.version.NmsVersion;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
-import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
@@ -29,8 +29,8 @@ public interface LongArrayShadowTag extends CollectionShadowTag<LongShadowTag> {
     }
 
     @ObfuscatedTarget({
-            @Mapping(value = "getAsLongArray", version = PackageVersion.NONE),
-            @Mapping(value = "g", version = PackageVersion.v1_20_R3)
+            @Mapping(value = "getAsLongArray", version = NmsVersion.v1_20_R4),
+            @Mapping(value = "g", version = NmsVersion.v1_20_R3)
     })
     long[] value();
 

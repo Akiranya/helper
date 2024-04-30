@@ -1,10 +1,10 @@
 package me.lucko.helper.shadows.nbt;
 
+import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
-import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
@@ -25,8 +25,8 @@ public interface IntArrayShadowTag extends CollectionShadowTag<IntShadowTag> {
     }
 
     @ObfuscatedTarget({
-            @Mapping(value = "getAsIntArray", version = PackageVersion.NONE),
-            @Mapping(value = "g", version = PackageVersion.v1_20_R3)
+            @Mapping(value = "getAsIntArray", version = NmsVersion.v1_20_R4),
+            @Mapping(value = "g", version = NmsVersion.v1_20_R3)
     })
     int[] value();
 

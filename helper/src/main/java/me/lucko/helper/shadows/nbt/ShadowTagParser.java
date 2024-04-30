@@ -1,11 +1,11 @@
 package me.lucko.helper.shadows.nbt;
 
+import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.Static;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
-import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
@@ -14,8 +14,8 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 public interface ShadowTagParser extends Shadow {
 
     @ObfuscatedTarget({
-            @Mapping(value = "parseTag", version = PackageVersion.NONE),
-            @Mapping(value = "a", version = PackageVersion.v1_20_R3)
+            @Mapping(value = "parseTag", version = NmsVersion.v1_20_R4),
+            @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
     CompoundShadowTag parseTag(String s);

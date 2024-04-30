@@ -13,7 +13,7 @@ project.ext.set("name", "helper")
 dependencies {
     /* internal */
 
-    val shadowVersion = "1.20.5-SNAPSHOT"
+    val shadowVersion = "1.20.6-SNAPSHOT"
     api("cc.mewcraft", "shadow-bukkit", shadowVersion)
     val mathVersion = "1.0.3"
     api("com.flowpowered", "flow-math", mathVersion)

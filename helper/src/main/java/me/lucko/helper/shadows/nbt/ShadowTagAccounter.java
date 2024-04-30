@@ -1,11 +1,11 @@
 package me.lucko.helper.shadows.nbt;
 
+import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.Static;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
 import me.lucko.shadow.bukkit.ObfuscatedTarget;
-import me.lucko.shadow.bukkit.PackageVersion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
@@ -14,15 +14,15 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 public interface ShadowTagAccounter extends Shadow {
 
     @ObfuscatedTarget({
-            @Mapping(value = "create", version = PackageVersion.NONE),
-            @Mapping(value = "a", version = PackageVersion.v1_20_R3)
+            @Mapping(value = "create", version = NmsVersion.v1_20_R4),
+            @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
     ShadowTagAccounter create(long max);
 
     @ObfuscatedTarget({
-            @Mapping(value = "unlimitedHeap", version = PackageVersion.NONE),
-            @Mapping(value = "a", version = PackageVersion.v1_20_R3)
+            @Mapping(value = "unlimitedHeap", version = NmsVersion.v1_20_R4),
+            @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
     ShadowTagAccounter unlimitedHeap();
