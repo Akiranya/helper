@@ -25,6 +25,7 @@
 
 package me.lucko.helper.scoreboard;
 
+import cc.mewcraft.version.NmsVersion;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.AbstractStructure;
 import com.comphenix.protocol.events.InternalStructure;
@@ -38,7 +39,6 @@ import me.lucko.helper.reflect.MinecraftVersion;
 import me.lucko.helper.reflect.MinecraftVersions;
 import me.lucko.helper.text3.Text;
 import me.lucko.helper.utils.annotation.NonnullByDefault;
-import me.lucko.shadow.bukkit.PackageVersion;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -66,7 +66,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam {
     // anything >= 1.13 uses chat components for display name, prefix and suffix
     private static final boolean GTEQ_1_13 = MinecraftVersion.getRuntimeVersion().isAfterOrEq(MinecraftVersions.v1_13);
     // 1.17 uses fancy optional subpacket structure so has to be handled in a specific way
-    private static final boolean GTEQ_1_17 = PackageVersion.runtimeVersion().isAfterOrEq(PackageVersion.v1_17_R1);
+    private static final boolean GTEQ_1_17 = NmsVersion.runtimeVersion().isAfterOrEq(NmsVersion.v1_17_R1);
 
     // the display name value in teams if limited to 32 chars
     private static final int MAX_NAME_LENGTH = 32;
