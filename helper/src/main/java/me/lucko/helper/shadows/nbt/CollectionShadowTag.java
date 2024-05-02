@@ -57,7 +57,6 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
         return ShadowTagType.of(elementTypeId());
     }
 
-    //<editor-fold desc="AbstractList Proxies">
     boolean add(T e);
 
     // We must explicitly specify shadow strategy for this method,
@@ -73,6 +72,5 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     boolean remove(T e);
 
     int size();
-    //</editor-fold>
 
 }

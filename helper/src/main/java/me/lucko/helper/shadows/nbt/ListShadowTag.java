@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 @NmsClassTarget("nbt.ListTag")
 @DefaultQualifier(NonNull.class)
-public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
+public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag>, Iterable<ShadowTag> {
 
     static ListShadowTag create() {
         return BukkitShadowFactory.global().constructShadow(ListShadowTag.class);
@@ -98,7 +98,7 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
     List<ShadowTag> list();
 
     @SuppressWarnings("unchecked")
-    default Iterator<ShadowTag> iterator() {
+    @Override default Iterator<ShadowTag> iterator() {
         final Object tag = Objects.requireNonNull(getShadowTarget());
         final Iterable<Object> iterable = (Iterable<Object>) tag;
         final Iterator<Object> iterator = iterable.iterator();
@@ -115,11 +115,11 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
         };
     }
 
-    default void forEach(Consumer<? super ShadowTag> action) {
+    @Override default void forEach(Consumer<? super ShadowTag> action) {
         iterator().forEachRemaining(action);
     }
 
-    default Spliterator<ShadowTag> spliterator() {
+    @Override default Spliterator<ShadowTag> spliterator() {
         return Spliterators.spliterator(list(), Spliterator.ORDERED | Spliterator.IMMUTABLE);
     }
 
