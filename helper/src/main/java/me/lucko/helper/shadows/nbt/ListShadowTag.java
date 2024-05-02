@@ -2,7 +2,10 @@ package me.lucko.helper.shadows.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.helper.nbt.ShadowTagType;
+import me.lucko.helper.nbt.ShadowTags;
+import me.lucko.shadow.Field;
 import me.lucko.shadow.Shadow;
+import me.lucko.shadow.ShadowingStrategy;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
@@ -10,8 +13,12 @@ import me.lucko.shadow.bukkit.ObfuscatedTarget;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
 
 @NmsClassTarget("nbt.ListTag")
 @DefaultQualifier(NonNull.class)
@@ -79,5 +86,41 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag> {
             @Mapping(value = "j", version = NmsVersion.v1_20_R3)
     })
     String getString(int index);
+
+    @ObfuscatedTarget({
+            @Mapping(value = "list", version = NmsVersion.v1_20_R4),
+            @Mapping(value = "c", version = NmsVersion.v1_20_R3)
+    })
+    @ShadowingStrategy(
+            wrapper = NbtShadowingStrategy.ForImmutableListTags.class
+    )
+    @Field
+    List<ShadowTag> list();
+
+    @SuppressWarnings("unchecked")
+    default Iterator<ShadowTag> iterator() {
+        final Object tag = Objects.requireNonNull(getShadowTarget());
+        final Iterable<Object> iterable = (Iterable<Object>) tag;
+        final Iterator<Object> iterator = iterable.iterator();
+        return new Iterator<>() {
+            @Override public boolean hasNext() {
+                return iterator.hasNext();
+            }
+            @Override public ShadowTag next() {
+                return ShadowTags.shadow(iterator.next());
+            }
+            @Override public void remove() {
+                iterator.remove();
+            }
+        };
+    }
+
+    default void forEach(Consumer<? super ShadowTag> action) {
+        iterator().forEachRemaining(action);
+    }
+
+    default Spliterator<ShadowTag> spliterator() {
+        return Spliterators.spliterator(list(), Spliterator.ORDERED | Spliterator.IMMUTABLE);
+    }
 
 }

@@ -68,14 +68,8 @@ public interface CollectionShadowTag<T extends ShadowTag> extends Shadow, Shadow
     )
     T get(int index);
 
-    @ShadowingStrategy(
-            unwrapper = NbtShadowingStrategy.ForShadowTags.class
-    )
     boolean contains(T e);
 
-    @ShadowingStrategy(
-            unwrapper = NbtShadowingStrategy.ForShadowTags.class
-    )
     boolean remove(T e);
 
     int size();
