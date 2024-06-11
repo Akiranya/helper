@@ -25,6 +25,8 @@
 
 package me.lucko.helper.plugin;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.Services;
 import me.lucko.helper.config.ConfigFactory;
@@ -34,7 +36,7 @@ import me.lucko.helper.scheduler.HelperExecutors;
 import me.lucko.helper.terminable.composite.CompositeTerminable;
 import me.lucko.helper.terminable.module.TerminableModule;
 import me.lucko.helper.utils.CommandMapUtil;
-import me.lucko.helper.utils.ResourceExtractor;
+import me.lucko.helper.utils.JarExtractor;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -45,9 +47,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * An "extended" JavaPlugin class.
@@ -235,9 +234,9 @@ public class ExtendedJavaPlugin extends JavaPlugin implements HelperPlugin {
     @Override
     public void saveResourceRecursively(@Nonnull final String name, final boolean overwrite) {
         Objects.requireNonNull(name, "name");
-        File targetFile = getRelativeFile(name);
-        if (overwrite || !targetFile.exists()) {
-            ResourceExtractor.copyResourceRecursively(getClassLoader().getResource(name), targetFile);
+        File destinationDirectory = getRelativeFile(name);
+        if (overwrite || !destinationDirectory.exists()) {
+            JarExtractor.extractJar(getClassLoader(), name, destinationDirectory);
         }
     }
 

@@ -34,7 +34,7 @@ import me.lucko.helper.scheduler.HelperExecutors
 import me.lucko.helper.terminable.composite.CompositeTerminable
 import me.lucko.helper.terminable.module.TerminableModule
 import me.lucko.helper.utils.CommandMapUtil
-import me.lucko.helper.utils.ResourceExtractor
+import me.lucko.helper.utils.JarExtractor
 import ninja.leaping.configurate.ConfigurationNode
 import org.bukkit.command.CommandExecutor
 import org.bukkit.configuration.file.YamlConfiguration
@@ -215,10 +215,9 @@ abstract class KExtendedJavaPlugin : SuspendingJavaPlugin(), KHelperPlugin {
     }
 
     override fun saveResourceRecursively(name: String, overwrite: Boolean) {
-        requireNonNull(name, "name")
-        val targetFile = getRelativeFile(name)
-        if (overwrite || !targetFile.exists()) {
-            ResourceExtractor.copyResourceRecursively(clazzLoader.getResource(name), targetFile)
+        val targetDirectory = getRelativeFile(name)
+        if (overwrite || !targetDirectory.exists()) {
+            JarExtractor.extractJar(clazzLoader, name, targetDirectory)
         }
     }
 
