@@ -18,6 +18,11 @@ public class JarExtractor {
                 destinationDirectory.mkdirs();
             }
 
+            // Ensure targetDirectory ends with '/'
+            if (!targetDirectory.endsWith("/")) {
+                targetDirectory = targetDirectory + "/";
+            }
+
             // Get the URL of the resource
             URL resourceUrl = classLoader.getResource(targetDirectory);
             if (resourceUrl == null) {
@@ -35,6 +40,12 @@ public class JarExtractor {
                     // Check if the entry is within the target folder
                     if (entryName.startsWith(targetDirectory)) {
                         String relativePath = entryName.substring(targetDirectory.length());
+
+                        // Ensure the relative path does not start with a '/'
+                        if (relativePath.startsWith("/")) {
+                            relativePath = relativePath.substring(1);
+                        }
+
                         File entryDestination = new File(destinationDirectory, relativePath);
 
                         if (entry.isDirectory()) {
