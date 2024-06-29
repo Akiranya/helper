@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Shadow;
@@ -10,12 +10,12 @@ import me.lucko.shadow.bukkit.ObfuscatedTarget;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
-@NmsClassTarget("nbt.FloatTag")
+@NmsClassTarget("nbt.ShortTag")
 @DefaultQualifier(NonNull.class)
-public interface FloatShadowTag extends Shadow, NumberShadowTag {
+public interface ShortTag extends Shadow, NumberTag {
 
-    static FloatShadowTag valueOf(float value) {
-        return BukkitShadowFactory.global().staticShadow(FloatShadowTag.class).floatValueOf(value);
+    static ShortTag valueOf(short value) {
+        return BukkitShadowFactory.global().staticShadow(ShortTag.class).shortValueOf(value);
     }
 
     @ObfuscatedTarget({
@@ -23,6 +23,6 @@ public interface FloatShadowTag extends Shadow, NumberShadowTag {
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
-    FloatShadowTag floatValueOf(float value);
+    ShortTag shortValueOf(short value);
 
 }

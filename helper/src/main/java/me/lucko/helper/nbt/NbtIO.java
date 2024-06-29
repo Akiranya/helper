@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Shadow;
@@ -15,20 +15,20 @@ import java.io.IOException;
 
 @NmsClassTarget("nbt.NbtIo")
 @DefaultQualifier(NonNull.class)
-public interface ShadowTagIO extends Shadow {
+public interface NbtIO extends Shadow {
 
     @ObfuscatedTarget({
             @Mapping(value = "read", version = NmsVersion.v1_20_R4),
             @Mapping(value = "a", version = NmsVersion.v1_20_R3),
     })
     @Static
-    CompoundShadowTag read(DataInput input) throws IOException;
+    CompoundTag read(DataInput input) throws IOException;
 
     @ObfuscatedTarget({
             @Mapping(value = "write", version = NmsVersion.v1_20_R4),
             @Mapping(value = "a", version = NmsVersion.v1_20_R3),
     })
     @Static
-    void write(CompoundShadowTag nbt, DataOutput output) throws IOException;
+    void write(CompoundTag nbt, DataOutput output) throws IOException;
 
 }

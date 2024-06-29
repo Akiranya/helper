@@ -1,6 +1,5 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
-import me.lucko.helper.nbt.ShadowTags;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.ShadowFactory;
 import me.lucko.shadow.ShadowingStrategy;
@@ -18,7 +17,7 @@ interface NbtShadowingStrategy {
     enum ForShadowTags implements ShadowingStrategy.Wrapper, ShadowingStrategy.Unwrapper {
         INSTANCE;
 
-        @Override public ShadowTag wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
+        @Override public Tag wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
             if (unwrapped == null) {
                 return null;
             }
@@ -48,13 +47,13 @@ interface NbtShadowingStrategy {
     enum ForImmutableListTags implements ShadowingStrategy.Wrapper, ShadowingStrategy.Unwrapper {
         INSTANCE;
 
-        @Override public List<ShadowTag> wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
+        @Override public List<Tag> wrap(@Nullable final Object unwrapped, @NonNull final Class<?> expectedType, @NonNull final ShadowFactory shadowFactory) {
             if (unwrapped == null) {
                 return null;
             }
 
             List<Object> nmsListTag = (List<Object>) unwrapped;
-            List<ShadowTag> shadowListTag = nmsListTag.stream().map(ShadowTags::shadow).toList();
+            List<Tag> shadowListTag = nmsListTag.stream().map(ShadowTags::shadow).toList();
             return shadowListTag;
         }
 

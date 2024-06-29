@@ -25,9 +25,6 @@
 
 package me.lucko.helper.nbt;
 
-import me.lucko.helper.shadows.nbt.CompoundShadowTag;
-import me.lucko.helper.shadows.nbt.ShadowTag;
-import me.lucko.helper.shadows.nbt.ShadowTagParser;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
 
 /**
@@ -35,30 +32,30 @@ import me.lucko.shadow.bukkit.BukkitShadowFactory;
  */
 public final class ShadowTags {
 
-    private static ShadowTagParser parser = null;
+    private static TagParser parser = null;
 
-    private static ShadowTagParser parser() {
+    private static TagParser parser() {
         // harmless race
         if (parser == null) {
             // must use BukkitShadowFactory for the Bukkit-specialized target resolvers
-            return parser = BukkitShadowFactory.global().staticShadow(ShadowTagParser.class);
+            return parser = BukkitShadowFactory.global().staticShadow(TagParser.class);
         }
         return parser;
     }
 
-    public static ShadowTag shadow(Object tagObject) {
+    public static Tag shadow(Object tagObject) {
         // first, shadow as a NBTBase
-        ShadowTag shadow = BukkitShadowFactory.global().shadow(ShadowTag.class, tagObject);
+        Tag shadow = BukkitShadowFactory.global().shadow(Tag.class, tagObject);
 
         // extract the tag's type
         ShadowTagType type = shadow.getType();
-        Class<? extends ShadowTag> realClass = type.shadowClass();
+        Class<? extends Tag> realClass = type.shadowClass();
 
         // return a shadow instance for the actual type
         return BukkitShadowFactory.global().shadow(realClass, tagObject);
     }
 
-    public static CompoundShadowTag parse(String s) {
+    public static CompoundTag parse(String s) {
         return parser().parseTag(s);
     }
 

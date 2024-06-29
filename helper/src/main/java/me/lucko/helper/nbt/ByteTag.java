@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Shadow;
@@ -12,14 +12,14 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.ByteTag")
 @DefaultQualifier(NonNull.class)
-public interface ByteShadowTag extends Shadow, NumberShadowTag {
+public interface ByteTag extends Shadow, NumberTag {
 
-    static ByteShadowTag valueOf(byte value) {
-        return BukkitShadowFactory.global().staticShadow(ByteShadowTag.class).byteValueOf(value);
+    static ByteTag valueOf(byte value) {
+        return BukkitShadowFactory.global().staticShadow(ByteTag.class).byteValueOf(value);
     }
 
-    static ByteShadowTag valueOf(boolean value) {
-        return BukkitShadowFactory.global().staticShadow(ByteShadowTag.class).byteValueOf(value);
+    static ByteTag valueOf(boolean value) {
+        return BukkitShadowFactory.global().staticShadow(ByteTag.class).byteValueOf(value);
     }
 
     @ObfuscatedTarget({
@@ -27,13 +27,13 @@ public interface ByteShadowTag extends Shadow, NumberShadowTag {
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
-    ByteShadowTag byteValueOf(byte value);
+    ByteTag byteValueOf(byte value);
 
     @ObfuscatedTarget({
             @Mapping(value = "valueOf", version = NmsVersion.v1_20_R4),
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
-    ByteShadowTag byteValueOf(boolean value);
+    ByteTag byteValueOf(boolean value);
 
 }

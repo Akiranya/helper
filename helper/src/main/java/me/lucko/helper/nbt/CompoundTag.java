@@ -1,7 +1,6 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
-import me.lucko.helper.nbt.ShadowTagType;
 import me.lucko.shadow.Field;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.ShadowingStrategy;
@@ -19,10 +18,10 @@ import java.util.UUID;
 
 @NmsClassTarget("nbt.CompoundTag")
 @DefaultQualifier(NonNull.class)
-public interface CompoundShadowTag extends Shadow, ShadowTag {
+public interface CompoundTag extends Shadow, Tag {
 
-    static CompoundShadowTag create() {
-        return BukkitShadowFactory.global().constructShadow(CompoundShadowTag.class);
+    static CompoundTag create() {
+        return BukkitShadowFactory.global().constructShadow(CompoundTag.class);
     }
 
     @ObfuscatedTarget({
@@ -57,7 +56,7 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
             @Mapping(value = "put", version = NmsVersion.v1_20_R4),
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
-    @Nullable ShadowTag put(String key, ShadowTag value);
+    @Nullable Tag put(String key, Tag value);
 
     @ObfuscatedTarget({
             @Mapping(value = "putByte", version = NmsVersion.v1_20_R4),
@@ -138,7 +137,7 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
     @ShadowingStrategy(
             wrapper = NbtShadowingStrategy.ForShadowTags.class
     )
-    @Nullable ShadowTag get(String key);
+    @Nullable Tag get(String key);
 
     @ObfuscatedTarget({
             @Mapping(value = "getTagType", version = NmsVersion.v1_20_R4),
@@ -245,7 +244,7 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
             @Mapping(value = "getCompound", version = NmsVersion.v1_20_R4),
             @Mapping(value = "p", version = NmsVersion.v1_20_R3)
     })
-    CompoundShadowTag getCompound(String key);
+    CompoundTag getCompound(String key);
 
     @ObfuscatedTarget({
             @Mapping(value = "getList", version = NmsVersion.v1_20_R4),
@@ -273,6 +272,6 @@ public interface CompoundShadowTag extends Shadow, ShadowTag {
             @Mapping(value = "merge", version = NmsVersion.v1_20_R4),
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
-    void merge(CompoundShadowTag other);
+    void merge(CompoundTag other);
 
 }

@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Field;
@@ -14,10 +14,10 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.EndTag")
 @DefaultQualifier(NonNull.class)
-public interface EndShadowTag extends Shadow, ShadowTag {
+public interface EndTag extends Shadow, Tag {
 
-    static EndShadowTag instance() {
-        return BukkitShadowFactory.global().staticShadow(EndShadowTag.class).INSTANCE();
+    static EndTag instance() {
+        return BukkitShadowFactory.global().staticShadow(EndTag.class).INSTANCE();
     }
 
     @ObfuscatedTarget({
@@ -27,6 +27,6 @@ public interface EndShadowTag extends Shadow, ShadowTag {
     @Static
     @Field
     @Target("INSTANCE")
-    EndShadowTag INSTANCE();
+    EndTag INSTANCE();
 
 }

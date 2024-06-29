@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.bukkit.BukkitShadowFactory;
@@ -12,16 +12,16 @@ import java.util.List;
 
 @NmsClassTarget("nbt.IntArrayTag")
 @DefaultQualifier(NonNull.class)
-public interface IntArrayShadowTag extends CollectionShadowTag<IntShadowTag> {
+public interface IntArrayTag extends CollectionTag<IntTag> {
 
     @SuppressWarnings("RedundantCast")
-    static IntArrayShadowTag create(int[] data) {
-        return BukkitShadowFactory.global().constructShadow(IntArrayShadowTag.class, (Object) data);
+    static IntArrayTag create(int[] data) {
+        return BukkitShadowFactory.global().constructShadow(IntArrayTag.class, (Object) data);
     }
 
     @SuppressWarnings("RedundantCast")
-    static IntArrayShadowTag create(List<Integer> data) {
-        return BukkitShadowFactory.global().constructShadow(IntArrayShadowTag.class, (Object) data);
+    static IntArrayTag create(List<Integer> data) {
+        return BukkitShadowFactory.global().constructShadow(IntArrayTag.class, (Object) data);
     }
 
     @ObfuscatedTarget({

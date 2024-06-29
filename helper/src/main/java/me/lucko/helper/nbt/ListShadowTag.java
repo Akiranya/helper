@@ -1,8 +1,6 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
-import me.lucko.helper.nbt.ShadowTagType;
-import me.lucko.helper.nbt.ShadowTags;
 import me.lucko.shadow.Field;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.ShadowingStrategy;
@@ -22,13 +20,13 @@ import java.util.function.Consumer;
 
 @NmsClassTarget("nbt.ListTag")
 @DefaultQualifier(NonNull.class)
-public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag>, Iterable<ShadowTag> {
+public interface ListShadowTag extends Shadow, CollectionTag<Tag>, Iterable<Tag> {
 
     static ListShadowTag create() {
         return BukkitShadowFactory.global().constructShadow(ListShadowTag.class);
     }
 
-    static ListShadowTag create(List<ShadowTag> list, ShadowTagType type) {
+    static ListShadowTag create(List<Tag> list, ShadowTagType type) {
         List<Object> unwrap = list.stream().map(Objects.requireNonNull(Shadow::getShadowTarget)).toList(); // unwrap
         return BukkitShadowFactory.global().constructShadow(ListShadowTag.class, unwrap, type.id());
     }
@@ -37,7 +35,7 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag>, I
             @Mapping(value = "getCompound", version = NmsVersion.v1_20_R4),
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
-    CompoundShadowTag getCompound(int index);
+    CompoundTag getCompound(int index);
 
     @ObfuscatedTarget({
             @Mapping(value = "getList", version = NmsVersion.v1_20_R4),
@@ -95,10 +93,10 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag>, I
             wrapper = NbtShadowingStrategy.ForImmutableListTags.class
     )
     @Field
-    List<ShadowTag> list();
+    List<Tag> list();
 
     @SuppressWarnings("unchecked")
-    @Override default Iterator<ShadowTag> iterator() {
+    @Override default Iterator<Tag> iterator() {
         final Object tag = Objects.requireNonNull(getShadowTarget());
         final Iterable<Object> iterable = (Iterable<Object>) tag;
         final Iterator<Object> iterator = iterable.iterator();
@@ -106,7 +104,7 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag>, I
             @Override public boolean hasNext() {
                 return iterator.hasNext();
             }
-            @Override public ShadowTag next() {
+            @Override public Tag next() {
                 return ShadowTags.shadow(iterator.next());
             }
             @Override public void remove() {
@@ -115,11 +113,11 @@ public interface ListShadowTag extends Shadow, CollectionShadowTag<ShadowTag>, I
         };
     }
 
-    @Override default void forEach(Consumer<? super ShadowTag> action) {
+    @Override default void forEach(Consumer<? super Tag> action) {
         iterator().forEachRemaining(action);
     }
 
-    @Override default Spliterator<ShadowTag> spliterator() {
+    @Override default Spliterator<Tag> spliterator() {
         return Spliterators.spliterator(list(), Spliterator.ORDERED | Spliterator.IMMUTABLE);
     }
 

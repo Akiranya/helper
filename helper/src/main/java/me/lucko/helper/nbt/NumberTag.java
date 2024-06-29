@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.bukkit.Mapping;
@@ -9,7 +9,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.NumericTag")
 @DefaultQualifier(NonNull.class)
-public interface NumberShadowTag extends ShadowTag {
+public interface NumberTag extends Tag {
 
     @ObfuscatedTarget({
             @Mapping(value = "getAsLong", version = NmsVersion.v1_20_R4),

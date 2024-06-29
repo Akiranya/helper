@@ -1,7 +1,6 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
-import me.lucko.helper.nbt.ShadowTagType;
 import me.lucko.shadow.Shadow;
 import me.lucko.shadow.bukkit.Mapping;
 import me.lucko.shadow.bukkit.NmsClassTarget;
@@ -14,7 +13,7 @@ import java.io.IOException;
 
 @NmsClassTarget("nbt.Tag")
 @DefaultQualifier(NonNull.class)
-public interface ShadowTag extends Shadow {
+public interface Tag extends Shadow {
 
     @ObfuscatedTarget({
             @Mapping(value = "write", version = NmsVersion.v1_20_R4),
@@ -36,7 +35,7 @@ public interface ShadowTag extends Shadow {
             @Mapping(value = "copy", version = NmsVersion.v1_20_R4),
             @Mapping(value = "d", version = NmsVersion.v1_20_R3)
     })
-    ShadowTag copy();
+    Tag copy();
 
     @ObfuscatedTarget({
             @Mapping(value = "getAsString", version = NmsVersion.v1_20_R4),

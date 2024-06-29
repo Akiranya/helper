@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Shadow;
@@ -12,10 +12,10 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.DoubleTag")
 @DefaultQualifier(NonNull.class)
-public interface DoubleShadowTag extends Shadow, NumberShadowTag {
+public interface DoubleTag extends Shadow, NumberTag {
 
-    static DoubleShadowTag valueOf(double value) {
-        return BukkitShadowFactory.global().staticShadow(DoubleShadowTag.class).doubleValueOf(value);
+    static DoubleTag valueOf(double value) {
+        return BukkitShadowFactory.global().staticShadow(DoubleTag.class).doubleValueOf(value);
     }
 
     @ObfuscatedTarget({
@@ -23,6 +23,6 @@ public interface DoubleShadowTag extends Shadow, NumberShadowTag {
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
-    DoubleShadowTag doubleValueOf(double value);
+    DoubleTag doubleValueOf(double value);
 
 }

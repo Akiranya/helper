@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -13,19 +13,19 @@ import java.util.List;
 
 @NmsClassTarget("nbt.LongArrayTag")
 @DefaultQualifier(NonNull.class)
-public interface LongArrayShadowTag extends CollectionShadowTag<LongShadowTag> {
+public interface LongArrayTag extends CollectionTag<LongTag> {
 
 
-    static LongArrayShadowTag create(long[] data) {
-        return BukkitShadowFactory.global().constructShadow(LongArrayShadowTag.class, (Object) data);
+    static LongArrayTag create(long[] data) {
+        return BukkitShadowFactory.global().constructShadow(LongArrayTag.class, (Object) data);
     }
 
-    static LongArrayShadowTag create(LongSet data) {
-        return BukkitShadowFactory.global().constructShadow(LongArrayShadowTag.class, (Object) data);
+    static LongArrayTag create(LongSet data) {
+        return BukkitShadowFactory.global().constructShadow(LongArrayTag.class, (Object) data);
     }
 
-    static LongArrayShadowTag create(List<Long> data) {
-        return BukkitShadowFactory.global().constructShadow(LongArrayShadowTag.class, (Object) data);
+    static LongArrayTag create(List<Long> data) {
+        return BukkitShadowFactory.global().constructShadow(LongArrayTag.class, (Object) data);
     }
 
     @ObfuscatedTarget({

@@ -1,4 +1,4 @@
-package me.lucko.helper.shadows.nbt;
+package me.lucko.helper.nbt;
 
 import cc.mewcraft.version.NmsVersion;
 import me.lucko.shadow.Shadow;
@@ -11,13 +11,13 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @NmsClassTarget("nbt.TagParser")
 @DefaultQualifier(NonNull.class)
-public interface ShadowTagParser extends Shadow {
+public interface TagParser extends Shadow {
 
     @ObfuscatedTarget({
             @Mapping(value = "parseTag", version = NmsVersion.v1_20_R4),
             @Mapping(value = "a", version = NmsVersion.v1_20_R3)
     })
     @Static
-    CompoundShadowTag parseTag(String s);
+    CompoundTag parseTag(String s);
 
 }

@@ -25,27 +25,25 @@
 
 package me.lucko.helper.nbt;
 
-import me.lucko.helper.shadows.nbt.*;
-
 /**
  * An enumeration of NBT tag types.
  */
 public enum ShadowTagType {
 
-    END(EndShadowTag.class, (byte) 0),
-    BYTE(ByteShadowTag.class, (byte) 1, true),
-    SHORT(ShortShadowTag.class, (byte) 2, true),
-    INT(IntShadowTag.class, (byte) 3, true),
-    LONG(LongShadowTag.class, (byte) 4, true),
-    FLOAT(FloatShadowTag.class, (byte) 5, true),
-    DOUBLE(DoubleShadowTag.class, (byte) 6, true),
-    BYTE_ARRAY(ByteArrayShadowTag.class, (byte) 7),
-    STRING(StringShadowTag.class, (byte) 8),
+    END(EndTag.class, (byte) 0),
+    BYTE(ByteTag.class, (byte) 1, true),
+    SHORT(ShortTag.class, (byte) 2, true),
+    INT(IntTag.class, (byte) 3, true),
+    LONG(LongTag.class, (byte) 4, true),
+    FLOAT(FloatTag.class, (byte) 5, true),
+    DOUBLE(DoubleTag.class, (byte) 6, true),
+    BYTE_ARRAY(ByteArrayTag.class, (byte) 7),
+    STRING(StringTag.class, (byte) 8),
     LIST(ListShadowTag.class, (byte) 9),
-    COMPOUND(CompoundShadowTag.class, (byte) 10),
-    INT_ARRAY(IntArrayShadowTag.class, (byte) 11),
-    LONG_ARRAY(LongArrayShadowTag.class, (byte) 12),
-    ANY_NUMERIC(NumberShadowTag.class, (byte) 99, true);
+    COMPOUND(CompoundTag.class, (byte) 10),
+    INT_ARRAY(IntArrayTag.class, (byte) 11),
+    LONG_ARRAY(LongArrayTag.class, (byte) 12),
+    ANY_NUMERIC(NumberTag.class, (byte) 99, true);
 
     private static final ShadowTagType[] TYPES = values();
 
@@ -60,7 +58,7 @@ public enum ShadowTagType {
         return TYPES[id];
     }
 
-    private final Class<? extends ShadowTag> shadowClass;
+    private final Class<? extends Tag> shadowClass;
 
     /**
      * The byte id of this tag type.
@@ -68,15 +66,15 @@ public enum ShadowTagType {
     private final byte id;
 
     /**
-     * If this tag type is a {@link NumberShadowTag number} type.
+     * If this tag type is a {@link NumberTag number} type.
      */
     private final boolean number;
 
-    ShadowTagType(Class<? extends ShadowTag> shadowClass, byte id) {
+    ShadowTagType(Class<? extends Tag> shadowClass, byte id) {
         this(shadowClass, id, false);
     }
 
-    ShadowTagType(Class<? extends ShadowTag> shadowClass, byte id, boolean number) {
+    ShadowTagType(Class<? extends Tag> shadowClass, byte id, boolean number) {
         this.shadowClass = shadowClass;
         this.id = id;
         this.number = number;
@@ -87,7 +85,7 @@ public enum ShadowTagType {
      *
      * @return the shadow class
      */
-    public Class<? extends ShadowTag> shadowClass() {
+    public Class<? extends Tag> shadowClass() {
         return this.shadowClass;
     }
 
@@ -101,7 +99,7 @@ public enum ShadowTagType {
     }
 
     /**
-     * Checks if this tag type is a {@link NumberShadowTag number} type.
+     * Checks if this tag type is a {@link NumberTag number} type.
      *
      * @return {@code true} if a number type, {@code false} if not
      */
