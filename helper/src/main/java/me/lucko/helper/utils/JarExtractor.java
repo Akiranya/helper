@@ -6,7 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -30,7 +34,22 @@ public class JarExtractor {
             }
 
             // Convert to JAR file URL
-            String jarPath = resourceUrl.getPath().substring(5, resourceUrl.getPath().indexOf("!"));
+            String jarPath;
+            try {
+                URI uri = resourceUrl.toURI();
+                // Use toString() to handle spaces and special characters correctly
+                String decodedUri = URLDecoder.decode(uri.toString(), StandardCharsets.UTF_8);
+                if (decodedUri.startsWith("jar:file:")) {
+                    jarPath = decodedUri.substring(9, decodedUri.indexOf("!"));
+                } else if (decodedUri.startsWith("file:")) {
+                    jarPath = decodedUri.substring(5);
+                } else {
+                    throw new IOException("Unexpected URI scheme in " + decodedUri);
+                }
+            } catch (URISyntaxException e) {
+                throw new IOException("Invalid URI syntax: " + resourceUrl, e);
+            }
+
             try (JarFile jar = new JarFile(new File(jarPath))) {
                 Enumeration<JarEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
