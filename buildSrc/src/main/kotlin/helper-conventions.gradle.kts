@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.serialization")
     kotlin("plugin.atomicfu")
     id("net.kyori.indra")
-    id("com.github.johnrengelman.shadow")
+    id("com.gradleup.shadow")
     `java-library`
     `maven-publish`
 }
@@ -69,21 +69,21 @@ kotlin {
                 */
                 compileOnly(kotlin("stdlib"))
                 compileOnly(kotlin("reflect"))
-                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
+                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
+                compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.9.0-RC.2") {
                     exclude("com.google.guava")
                     exclude("org.jetbrains.kotlin")
                     exclude("org.jetbrains.kotlinx")
                 }
-                compileOnly("org.jetbrains.kotlinx:atomicfu:0.23.1")
+                compileOnly("org.jetbrains.kotlinx:atomicfu:0.25.0")
             }
         }
 
         val test by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-                implementation("org.jetbrains.kotlinx:atomicfu:0.23.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
+                implementation("org.jetbrains.kotlinx:atomicfu:0.25.0")
             }
         }
     }
