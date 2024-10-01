@@ -92,12 +92,6 @@ paper {
     website = "https://github.com/lucko/helper"
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     serverDependencies {
-        // Kotlin
-        register("Kotlin") {
-            required = true
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-
         // 3rd party plugins
         register("ProtocolLib") {
             required = false
