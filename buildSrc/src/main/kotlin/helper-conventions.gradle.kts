@@ -91,12 +91,10 @@ kotlin {
 
 publishing {
     repositories {
-        maven {
-            name = "nyaadanbou"
-            url = uri("https://repo.mewcraft.cc/releases/")
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
+        maven("https://repo.mewcraft.cc/releases/") {
+            credentials {
+                username = project.findProperty("nyaadanbou.mavenUsername") as String?
+                password = project.findProperty("nyaadanbou.mavenPassword") as String?
             }
         }
     }
