@@ -3,18 +3,6 @@
 
 helper is a development toolkit / library for Bukkit plugin developers. It provides a number of utilities and extended APIs which help to reduce boilerplate code and offer alternative paradigms for creating content.
 
-#### History
-
-💡 helper started off as a library to experiment with an alternative paradigm for creating [event listeners](https://github.com/lucko/helper/wiki/helper:-Events). Over time, more functionality has been added, usually as a response to a specific development need as I completed freelance work.
-
-🌍 I don't use helper in any of my public projects - it's quite a big library, and I don't like to add bloat unnecessarily!
-
-✅ However, it has been used extensively in a number of private server projects, most notably, in most custom plugins on servers operated by [Voldex Games](https://voldex.net/) (TheArchon, PrimeMC, etc). I'm also aware of a number of other developers / development teams who still actively use helper, which is awesome!
-
-#### Status
-
-I'm no longer actively working on further API additions, but the project is still being used frequently by various development teams, and I accept pull requests!
-
 ### Links
 
 * [**Download**](https://ci.lucko.me/job/helper/) (download links for the standalone helper plugins)
@@ -22,6 +10,7 @@ I'm no longer actively working on further API additions, but the project is stil
 
 
 ### Modules
+
 ##### [`helper`](https://github.com/lucko/helper/tree/master/helper): The main helper project
 [![Artifact](https://img.shields.io/badge/build-artifact-brightgreen.svg)](https://ci.lucko.me/job/helper/lastSuccessfulBuild/artifact/helper/target/helper.jar) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/me.lucko/helper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/me.lucko/helper) [![Javadocs](https://javadoc.io/badge/me.lucko/helper.svg)](https://javadoc.io/doc/me.lucko/helper)
 
@@ -43,7 +32,7 @@ I'm no longer actively working on further API additions, but the project is stil
 ##### [`helper-js`](https://github.com/lucko/helper/tree/master/helper-js): JavaScript plugins using Nashorn.
 [![Artifact](https://img.shields.io/badge/build-artifact-brightgreen.svg)](https://ci.lucko.me/job/helper/lastSuccessfulBuild/artifact/helper-js/target/helper-js.jar) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/me.lucko/helper-js/badge.svg)](https://maven-badges.herokuapp.com/maven-central/me.lucko/helper-js) [![Javadocs](https://javadoc.io/badge/me.lucko/helper-js.svg)](https://javadoc.io/doc/me.lucko/helper-js)
 
-## Feature Overview
+### Feature Overview
 
 * [`Events`](https://github.com/lucko/helper/wiki/helper:-Events) - functional event handling and flexible listener registration
 * [`Scheduler`](https://github.com/lucko/helper/wiki/helper:-Scheduler) - easy access to the Bukkit scheduler
@@ -66,6 +55,7 @@ I'm no longer actively working on further API additions, but the project is stil
 
 [`... and much more!`](https://github.com/lucko/helper/wiki/)
 
-## Requirements
+### Requirements
 
-This plugin assumes that the server is running with `mojang mapping`.
+* The server must be running with `mojang mapping` instead of `spigot mapping`.
+* The server must have the kotlin environment installed (loaded by system classloader).
