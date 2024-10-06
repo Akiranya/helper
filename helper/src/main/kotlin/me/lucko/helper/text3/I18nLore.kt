@@ -92,41 +92,33 @@ private constructor() {
      * @param key the translation key
      * @param args the translation arguments
      */
-    @JvmName("argumentsListComponent")
+    @JvmName("arguments1")
     fun arguments(key: String, args: List<ComponentLike>): I18nLore {
         val list = listOf(Component.translatable().key(key).arguments(args)) // singleton list
         arguments.replaceValues(key, list)
         return this
     }
 
-    @JvmName("argumentsVarargComponent")
+    @JvmName("arguments2")
     fun arguments(key: String, vararg args: ComponentLike) = arguments(key, args.toList())
 
-    @JvmName("argumentsListComponentGetter")
-    @OverloadResolutionByLambdaReturnType // WTF ???
+    @JvmName("arguments3")
     fun arguments(key: String, args: () -> List<ComponentLike>) = arguments(key, args())
 
-    @JvmName("argumentsComponentGetter")
-    @OverloadResolutionByLambdaReturnType
+    @JvmName("arguments4")
     fun arguments(key: String, args: () -> ComponentLike) = arguments(key, args())
 
-    ////// MiniMessage String as Arguments //////
+    @JvmName("arguments5")
+    fun arguments(key: String, args: List<String>) = arguments(key, args.map(String::mini))
 
-    @JvmName("argumentsListString")
-    fun arguments(key: String, args: List<String>) = arguments(key, args.map(kotlin.String::mini))
-
-    @JvmName("argumentsVarargString")
+    @JvmName("arguments6")
     fun arguments(key: String, vararg args: String) = arguments(key, args.toList())
 
-    @JvmName("argumentsListStringGetter")
-    @OverloadResolutionByLambdaReturnType
+    @JvmName("arguments7")
     fun arguments(key: String, args: () -> List<String>) = arguments(key, args())
 
-    @JvmName("argumentsStringGetter")
-    @OverloadResolutionByLambdaReturnType
+    @JvmName("arguments8")
     fun arguments(key: String, args: () -> String) = arguments(key, args())
-
-    ////// MiniMessage String as Arguments //////
 
     /**
      * Sets the translation arguments for the component specified by [key].
@@ -152,28 +144,21 @@ private constructor() {
      * @param key the translation key
      * @param items
      */
-    @JvmName("argumentsManyListComponent")
+    @JvmName("argumentsMany1")
     fun argumentsMany(key: String, items: List<ComponentLike>): I18nLore {
         val list = items.map { Component.translatable().key(key).arguments(it) }
         arguments.replaceValues(key, list)
         return this
     }
 
-    @JvmName("argumentsManyListComponentGetter")
-    @OverloadResolutionByLambdaReturnType
+    @JvmName("argumentsMany2")
     fun argumentsMany(key: String, items: () -> List<ComponentLike>) = argumentsMany(key, items())
 
-
-    ////// MiniMessage String as Arguments //////
-
-    @JvmName("argumentsManyListString")
+    @JvmName("argumentsMany3")
     fun argumentsMany(key: String, items: List<String>) = argumentsMany(key, items.map(String::mini))
 
-    @JvmName("argumentsManyListStringGetter")
-    @OverloadResolutionByLambdaReturnType
+    @JvmName("argumentsMany4")
     fun argumentsMany(key: String, items: () -> List<String>) = argumentsMany(key, items())
-
-    ////// MiniMessage String as Arguments //////
 
     /**
      * Register a cleanup for the final lore construction.
