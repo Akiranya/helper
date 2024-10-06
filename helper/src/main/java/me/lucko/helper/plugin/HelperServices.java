@@ -25,25 +25,14 @@
 
 package me.lucko.helper.plugin;
 
-import me.lucko.helper.bossbar.BossBarFactory;
-import me.lucko.helper.bossbar.BukkitBossBarFactory;
-import me.lucko.helper.bossbar.ViaBossBarFactory;
 import me.lucko.helper.messaging.bungee.BungeeCord;
 import me.lucko.helper.messaging.bungee.BungeeCordImpl;
-import org.bukkit.plugin.ServicePriority;
 
 final class HelperServices {
     private HelperServices() {}
 
     static void setup(ExtendedJavaPlugin plugin) {
         plugin.provideService(BungeeCord.class, new BungeeCordImpl(plugin));
-        if (plugin.isPluginPresent("ViaVersion")) {
-            BossBarFactory bossBarFactory = new ViaBossBarFactory();
-            plugin.provideService(BossBarFactory.class, bossBarFactory, ServicePriority.High);
-        } else if (classExists("org.bukkit.boss.BossBar")) {
-            BossBarFactory bossBarFactory = new BukkitBossBarFactory(plugin.getServer());
-            plugin.provideService(BossBarFactory.class, bossBarFactory);
-        }
     }
 
     private static boolean classExists(String clazz) {
