@@ -1,21 +1,22 @@
 import net.minecrell.pluginyml.paper.PaperPluginDescription.RelativeLoadOrder
 
 plugins {
+    id("nyaadanbou-conventions.copy-jar")
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
+    alias(local.plugins.pluginyml.paper)
 }
 
 version = "1.2.0"
 description = "Provides a cached lookup service for player profiles."
-project.ext.set("name", "helper-profiles")
 
 dependencies {
-    implementation("com.github.ben-manes.caffeine", "caffeine", "3.1.5") {
+    compileOnly(project(":helper"))
+    compileOnly(project(":helper-sql"))
+    compileOnly(local.paper)
+    implementation(local.caffeine) {
         exclude("com.google.errorprone", "error_prone_annotations")
         exclude("org.checkerframework", "checker-qual")
     }
-    compileOnly(project(":helper"))
-    compileOnly(project(":helper-sql"))
 }
 
 tasks {
@@ -23,11 +24,15 @@ tasks {
         val shadePattern = "me.lucko.helper.profiles.plugin.external."
         relocate("com.github.benmanes.caffeine", shadePattern + "caffeine")
     }
+    copyJar {
+        environment = "paper"
+        jarFileName = "helper-profiles-${project.version}.jar"
+    }
 }
 
 paper {
     main = "me.lucko.helper.profiles.plugin.HelperProfilesPlugin"
-    name = project.ext.get("name") as String
+    name = "helper-profiles"
     version = "${project.version}"
     description = project.description
     apiVersion = "1.19"

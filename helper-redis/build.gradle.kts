@@ -1,20 +1,18 @@
 import net.minecrell.pluginyml.paper.PaperPluginDescription.RelativeLoadOrder
 
 plugins {
+    id("nyaadanbou-conventions.copy-jar")
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
+    alias(local.plugins.pluginyml.paper)
 }
 
 version = "1.2.1"
 description = "Provides Redis clients and implements the helper Messaging system using Jedis."
-project.ext.set("name", "helper-redis")
 
 dependencies {
-    val jedisVersion = "3.10.0"
-    implementation("redis.clients", "jedis", jedisVersion) {
-        exclude("org.slf4j", "slf4j-api")
-    }
     compileOnly(project(":helper"))
+    compileOnly(local.paper)
+    implementation(local.jedis) { exclude("org.slf4j", "slf4j-api") }
 }
 
 tasks {
@@ -23,11 +21,15 @@ tasks {
         relocate("redis.clients.jedis", shadePattern + "jedis")
         relocate("org.apache.commons.pool", shadePattern + "pool")
     }
+    copyJar {
+        environment = "paper"
+        jarFileName = "helper-redis-${project.version}.jar"
+    }
 }
 
 paper {
     main = "me.lucko.helper.redis.plugin.HelperRedisPlugin"
-    name = project.ext.get("name") as String
+    name = "helper-redis"
     version = "${project.version}"
     description = project.description
     apiVersion = "1.19"

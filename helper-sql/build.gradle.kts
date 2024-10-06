@@ -1,21 +1,19 @@
 import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
+    id("nyaadanbou-conventions.copy-jar")
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
+    alias(local.plugins.pluginyml.paper)
 }
 
 version = "1.3.2"
 description = "Provides SQL datasources using HikariCP."
-project.ext.set("name", "helper-sql")
 
 dependencies {
-    // 由于 consumer 几乎不会直接用到 HikariCP 因此使用 implementation
-    implementation("com.zaxxer", "HikariCP", "5.1.0") {
-        exclude("org.slf4j", "slf4j-api")
-    }
-    // runtimeOnly("com.mysql", "mysql-connector-j", "8.2.0") // Paper Runtime 已经包含该依赖
     compileOnly(project(":helper"))
+    compileOnly(local.paper)
+    implementation(local.hikaricp) { exclude("org.slf4j", "slf4j-api") }
+    runtimeOnly(local.mysql.connector.java)
 }
 
 tasks {
@@ -30,14 +28,18 @@ tasks {
         relocate("com.google.protobuf", shadePattern + "protobuf")
         relocate("be.bendem.sqlstreams", "me.lucko.helper.sql.streams")
     }
+    copyJar {
+        environment = "paper"
+        jarFileName = "helper-sql-${project.version}.jar"
+    }
 }
 
 paper {
     main = "me.lucko.helper.sql.plugin.HelperSqlPlugin"
-    name = project.ext.get("name") as String
+    name = "helper-sql"
     version = "${project.version}"
     description = project.description
-    apiVersion = "1.19"
+    apiVersion = "1.21"
     author = "Luck"
     serverDependencies {
         register("helper") {

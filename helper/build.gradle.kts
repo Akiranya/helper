@@ -1,76 +1,43 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
-import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
+    id("nyaadanbou-conventions.copy-jar")
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
+    alias(local.plugins.pluginyml.paper)
 }
 
 version = "6.0.0-SNAPSHOT"
 description = "A utility to reduce boilerplate code in Bukkit plugins."
-project.ext.set("name", "helper")
 
 dependencies {
-    /* internal */
-
-    val shadowVersion = "1.21.1-SNAPSHOT"
-    api("cc.mewcraft", "shadow-bukkit", shadowVersion)
-    val mathVersion = "1.0.3"
-    api("com.flowpowered", "flow-math", mathVersion)
-    implementation("net.jodah", "expiringmap", "0.5.10")
-    val configurateVersion = "3.7.3"
-    implementation("org.spongepowered", "configurate-core", configurateVersion) {
-        exclude("org.checkerframework", "checker-qual") // provided by Paper JAR
-        exclude("com.google.guava", "guava") // provided by Paper JAR
-        exclude("com.google.inject", "guice") // we don't use Guice extras
+    compileOnly(local.paper)
+    api(local.flowmath)
+    implementation(local.expiringmap)
+    implementation(local.configurate.core) {
+        exclude("org.checkerframework", "checker-qual")
+        exclude("com.google.guava", "guava")
+        exclude("com.google.inject", "guice")
     }
-    implementation("org.spongepowered", "configurate-yaml", configurateVersion) {
-        exclude("org.yaml", "snakeyaml") // provided by Paper JAR
+    implementation(local.configurate.yaml) {
+        exclude("org.yaml", "snakeyaml")
     }
-    implementation("org.spongepowered", "configurate-gson", configurateVersion) {
-        exclude("com.google.code.gson", "gson") // provided by Paper JAR
+    implementation(local.configurate.gson) {
+        exclude("com.google.code.gson", "gson")
     }
-    implementation("org.spongepowered", "configurate-hocon", configurateVersion) {
-        exclude("com.typesafe", "config") // provided by Kotlin JAR
+    implementation(local.configurate.hocon) {
+        exclude("com.typesafe", "config")
     }
-    implementation("net.kyori", "event-api", "3.0.0") {
-        exclude("com.google.guava", "guava") // provided by Paper JAR
-        exclude("org.checkerframework", "checker-qual") // provided by Paper JAR
+    implementation(local.eventbus) {
+        exclude("com.google.guava", "guava")
+        exclude("org.checkerframework", "checker-qual")
     }
-    // MCCoroutine 的 SuspendingJavaPlugin class 在每个独立插件中必须存在一个独立的 instance
-    // 这是因为 MCCoroutine 所提供的 coroutine scope 是与 SuspendingJavaPlugin instance 绑定的
-    val mccoroutineVersion = "2.13.0"
-    api("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-api", mccoroutineVersion) {
-        exclude("org.jetbrains.kotlin") // provided by Kotlin JAR
-        exclude("org.jetbrains.kotlinx") // provided by Kotlin JAR
+    api(local.mccoroutine.api) {
+        exclude("org.jetbrains.kotlin")
+        exclude("org.jetbrains.kotlinx")
     }
-    implementation("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-core", mccoroutineVersion) {
-        exclude("org.jetbrains.kotlin") // provided by Kotlin JAR
-        exclude("org.jetbrains.kotlinx") // provided by Kotlin JAR
-    }
-
-    /* 3rd party plugins */
-
-    compileOnly("com.comphenix.protocol", "ProtocolLib", "5.0.0")
-    compileOnly("us.myles", "viaversion", "2.1.3") {
-        isTransitive = false
-    }
-    compileOnly("net.citizensnpcs", "citizens-main", "2.0.30-SNAPSHOT") {
-        isTransitive = false
-    }
-}
-
-kotlin {
-    sourceSets {
-        val main by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3") {
-                    exclude("org.jetbrains.kotlin")
-                    exclude("org.jetbrains.kotlinx")
-                    exclude("com.google.guava", "guava")
-                }
-            }
-        }
+    implementation(local.mccoroutine.core) {
+        exclude("org.jetbrains.kotlin")
+        exclude("org.jetbrains.kotlinx")
     }
 }
 
@@ -80,56 +47,33 @@ tasks {
         relocate("ninja.leaping.configurate", "me.lucko.helper.config")
         // 特意不 relocate MCCoroutine 因为 consumers 会直接 join 该 JAR 的 classpath
     }
+    copyJar {
+        environment = "paper"
+        jarFileName = "helper-${project.version}.jar"
+    }
 }
 
 paper {
     main = "me.lucko.helper.internal.StandalonePlugin"
-    name = project.ext.get("name") as String
+    name = "helper"
     version = "${project.version}"
     description = project.description
-    apiVersion = "1.19"
+    apiVersion = "1.21"
     author = "Luck"
     website = "https://github.com/lucko/helper"
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     serverDependencies {
-        // 3rd party plugins
-        register("ProtocolLib") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-        register("ViaVersion") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-        register("Citizens") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-
-        // Optional modules
-        register("helper-js") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.AFTER
-        }
-        register("helper-lilypad") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.AFTER
-        }
         register("helper-mongo") {
             required = false
-            load = PaperPluginDescription.RelativeLoadOrder.AFTER
         }
         register("helper-profiles") {
             required = false
-            load = PaperPluginDescription.RelativeLoadOrder.AFTER
         }
         register("helper-redis") {
             required = false
-            load = PaperPluginDescription.RelativeLoadOrder.AFTER
         }
         register("helper-sql") {
             required = false
-            load = PaperPluginDescription.RelativeLoadOrder.AFTER
         }
     }
 }

@@ -5,13 +5,23 @@ plugins {
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    maven("https://repo.mewcraft.cc/releases")
+    maven("https://repo.mewcraft.cc/private") {
+        credentials {
+            username = providers.gradleProperty("nyaadanbou.mavenUsername").orNull
+            password = providers.gradleProperty("nyaadanbou.mavenPassword").orNull
+        }
+    }
 }
 
 dependencies {
-    implementation("net.kyori.indra", "net.kyori.indra.gradle.plugin", "3.1.+")
-    implementation("com.gradleup.shadow", "com.gradleup.shadow.gradle.plugin", "8.3.0")
-    val kotlinVersion = "2.0.10"
-    implementation("org.jetbrains.kotlin.jvm", "org.jetbrains.kotlin.jvm.gradle.plugin", kotlinVersion)
-    implementation("org.jetbrains.kotlin.plugin.serialization", "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", kotlinVersion)
-    implementation("org.jetbrains.kotlin.plugin.atomicfu", "org.jetbrains.kotlin.plugin.atomicfu.gradle.plugin", kotlinVersion)
+    implementation(local.plugin.indra)
+    implementation(local.plugin.shadow)
+    implementation(local.plugin.kotlin.jvm)
+    implementation(local.plugin.kotlin.atomicfu)
+    implementation(local.plugin.nyaadanbou.conventions)
+}
+
+dependencies {
+    implementation(files(local.javaClass.superclass.protectionDomain.codeSource.location))
 }
