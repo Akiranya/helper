@@ -36,8 +36,6 @@ import me.lucko.helper.messaging.bungee.BungeeCord;
 import me.lucko.helper.messaging.bungee.BungeeCordImpl;
 import me.lucko.helper.npc.CitizensNpcFactory;
 import me.lucko.helper.npc.NpcFactory;
-import me.lucko.helper.scoreboard.PacketScoreboardProvider;
-import me.lucko.helper.scoreboard.ScoreboardProvider;
 import me.lucko.helper.signprompt.PacketSignPromptFactory;
 import me.lucko.helper.signprompt.SignPromptFactory;
 
@@ -50,10 +48,6 @@ final class HelperServices {
         plugin.provideService(HologramFactory.class, new BukkitHologramFactory());
         plugin.provideService(BungeeCord.class, new BungeeCordImpl(plugin));
         if (plugin.isPluginPresent("ProtocolLib")) {
-            PacketScoreboardProvider scoreboardProvider = new PacketScoreboardProvider(plugin);
-            plugin.provideService(ScoreboardProvider.class, scoreboardProvider);
-            plugin.provideService(PacketScoreboardProvider.class, scoreboardProvider);
-
             SignPromptFactory signPromptFactory = new PacketSignPromptFactory();
             plugin.provideService(SignPromptFactory.class, signPromptFactory);
 
