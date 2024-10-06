@@ -25,17 +25,13 @@
 
 package me.lucko.helper.item;
 
-import me.lucko.helper.menu.Item;
 import me.lucko.helper.text3.Text;
 import me.lucko.helper.utils.annotation.NonnullByDefault;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -43,22 +39,15 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
-
-import javax.annotation.Nullable;
 
 /**
  * Easily construct {@link ItemStack} instances
  */
 @NonnullByDefault
 public final class ItemStackBuilder {
-    private static final ItemFlag[] ALL_FLAGS = new ItemFlag[]{
-            ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES,
-            ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ADDITIONAL_TOOLTIP,
-            ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON
-    };
+    private static final ItemFlag[] ALL_FLAGS = ItemFlag.values();
 
     private final ItemStack itemStack;
 
@@ -195,41 +184,4 @@ public final class ItemStackBuilder {
     public ItemStack build() {
         return this.itemStack;
     }
-
-    public Item.Builder buildItem() {
-        return Item.builder(build());
-    }
-
-    public Item build(@Nullable Runnable handler) {
-        return buildItem().bind(handler, ClickType.RIGHT, ClickType.LEFT).build();
-    }
-
-    public Item build(ClickType type, @Nullable Runnable handler) {
-        return buildItem().bind(type, handler).build();
-    }
-
-    public Item build(@Nullable Runnable rightClick, @Nullable Runnable leftClick) {
-        return buildItem().bind(ClickType.RIGHT, rightClick).bind(ClickType.LEFT, leftClick).build();
-    }
-
-    public Item buildFromMap(Map<ClickType, Runnable> handlers) {
-        return buildItem().bindAllRunnables(handlers.entrySet()).build();
-    }
-
-    public Item buildConsumer(@Nullable Consumer<InventoryClickEvent> handler) {
-        return buildItem().bind(handler, ClickType.RIGHT, ClickType.LEFT).build();
-    }
-
-    public Item buildConsumer(ClickType type, @Nullable Consumer<InventoryClickEvent> handler) {
-        return buildItem().bind(type, handler).build();
-    }
-
-    public Item buildConsumer(@Nullable Consumer<InventoryClickEvent> rightClick, @Nullable Consumer<InventoryClickEvent> leftClick) {
-        return buildItem().bind(ClickType.RIGHT, rightClick).bind(ClickType.LEFT, leftClick).build();
-    }
-
-    public Item buildFromConsumerMap(Map<ClickType, Consumer<InventoryClickEvent>> handlers) {
-        return buildItem().bindAllConsumers(handlers.entrySet()).build();
-    }
-
 }
