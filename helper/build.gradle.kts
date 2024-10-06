@@ -6,39 +6,20 @@ plugins {
     alias(local.plugins.pluginyml.paper)
 }
 
-version = "6.0.0-SNAPSHOT"
+version = "6.0.0"
 description = "A utility to reduce boilerplate code in Bukkit plugins."
 
 dependencies {
     compileOnly(local.paper)
     api(local.flowmath)
     implementation(local.expiringmap)
-    implementation(local.configurate.core) {
-        exclude("org.checkerframework", "checker-qual")
-        exclude("com.google.guava", "guava")
-        exclude("com.google.inject", "guice")
-    }
-    implementation(local.configurate.yaml) {
-        exclude("org.yaml", "snakeyaml")
-    }
-    implementation(local.configurate.gson) {
-        exclude("com.google.code.gson", "gson")
-    }
-    implementation(local.configurate.hocon) {
-        exclude("com.typesafe", "config")
-    }
-    implementation(local.eventbus) {
-        exclude("com.google.guava", "guava")
-        exclude("org.checkerframework", "checker-qual")
-    }
-    api(local.mccoroutine.api) {
-        exclude("org.jetbrains.kotlin")
-        exclude("org.jetbrains.kotlinx")
-    }
-    implementation(local.mccoroutine.core) {
-        exclude("org.jetbrains.kotlin")
-        exclude("org.jetbrains.kotlinx")
-    }
+    implementation(local.configurate.core) { isTransitive = false }
+    implementation(local.configurate.yaml) { isTransitive = false }
+    implementation(local.configurate.gson) { isTransitive = false }
+    implementation(local.configurate.hocon) { isTransitive = false }
+    implementation(local.eventbus) { isTransitive = false }
+    api(local.mccoroutine.api) { isTransitive = false }
+    implementation(local.mccoroutine.core) { isTransitive = false }
 }
 
 tasks {

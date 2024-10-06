@@ -18,7 +18,6 @@ dependencies {
     implementation(local.plugin.indra)
     implementation(local.plugin.shadow)
     implementation(local.plugin.kotlin.jvm)
-    implementation(local.plugin.kotlin.atomicfu)
     implementation(local.plugin.nyaadanbou.conventions)
 }
 

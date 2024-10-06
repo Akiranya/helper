@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.kotlinx.atomicfu")
     id("net.kyori.indra")
     id("com.gradleup.shadow")
     `java-library`
@@ -49,15 +48,12 @@ kotlin {
         val main by getting {
             dependencies {
                 compileOnly(kotlin("stdlib"))
-                compileOnly(kotlin("reflect"))
                 compileOnly(local.kotlinx.coroutines.core)
             }
         }
         val test by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(kotlin("stdlib"))
-                implementation(kotlin("reflect"))
                 implementation(local.kotlinx.coroutines.core)
             }
         }
@@ -82,21 +78,14 @@ publishing {
 
 tasks {
     compileJava {
+
         options.compilerArgs.addAll(
             listOf(
-                // FIXME i dunno why "-Xlint:none" not working
                 "-Xlint:-deprecation",
-                "-Xlint:-overrides",
                 "-Xlint:-rawtypes",
-                "-Xlint:-serial",
-                "-Xlint:-try",
                 "-Xlint:-unchecked",
-                "-Xlint:-varargs",
             )
         )
-    }
-    compileKotlin {
-        dependsOn(clean)
     }
     assemble {
         dependsOn(shadowJar)
@@ -104,10 +93,8 @@ tasks {
     shadowJar {
         archiveClassifier.set("shaded")
         dependencies {
-            exclude("META-INF/NOTICE")
             exclude("META-INF/maven/**")
             exclude("META-INF/versions/**")
-            exclude("META-INF/**.kotlin_module")
         }
         from("${rootProject.rootDir}") {
             include("LICENSE.txt")
@@ -117,11 +104,5 @@ tasks {
         from("${rootProject.rootDir}") {
             include("LICENSE.txt")
         }
-    }
-    javadoc {
-        enabled = false
-    }
-    javadocJar {
-        enabled = false
     }
 }
