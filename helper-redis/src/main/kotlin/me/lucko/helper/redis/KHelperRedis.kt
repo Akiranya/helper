@@ -25,7 +25,6 @@
 package me.lucko.helper.redis
 
 import com.google.common.reflect.TypeToken
-import kotlinx.atomicfu.locks.withLock
 import kotlinx.coroutines.*
 import me.lucko.helper.extension.exceptionHandler
 import me.lucko.helper.messaging.KAbstractMessenger
@@ -39,6 +38,7 @@ import redis.clients.jedis.JedisPoolConfig
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class KHelperRedis(
     credentials: RedisCredentials,
@@ -83,7 +83,7 @@ class KHelperRedis(
         } else {
             JedisPool(config, credentials.address, credentials.port, 2000, credentials.password)
         }.apply {
-            getResource().use { jedis -> jedis.ping() }
+            resource.use { jedis -> jedis.ping() }
         }
 
         redisScope.launch {

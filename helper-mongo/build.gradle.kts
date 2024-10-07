@@ -1,24 +1,19 @@
 import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
+    id("nyaadanbou-conventions.copy-jar")
     id("helper-conventions")
-    id("net.minecrell.plugin-yml.paper") version ("0.6.0")
+    alias(local.plugins.pluginyml.paper)
 }
 
 version = "1.2.0"
-project.ext.set("name", "helper-mongo")
 description = "Provides MongoDB datasources."
 
 dependencies {
-    val morphiaVersion = "1.3.2"
-    compileOnlyApi("org.mongodb.morphia", "morphia", morphiaVersion) {
-        isTransitive = false
-    }
-    implementation("org.mongodb.morphia", "morphia", morphiaVersion) {
-        isTransitive = false
-    }
-    implementation("org.mongodb", "mongo-java-driver", "3.12.12")
     compileOnly(project(":helper"))
+    compileOnly(local.paper)
+    api(local.morphia) { isTransitive = false }
+    implementation(local.mongo.java.driver)
 }
 
 tasks {
@@ -32,11 +27,15 @@ tasks {
         relocate("org.mongodb.morphia", shadePattern + "morphia")
         relocate("org.bson", shadePattern + "bson")
     }
+    copyJar {
+        environment = "paper"
+        jarFileName = "helper-mongo-${project.version}.jar"
+    }
 }
 
 paper {
     main = "me.lucko.helper.mongo.plugin.HelperMongoPlugin"
-    name = project.ext.get("name") as String
+    name = "helper-mongo"
     version = "${project.version}"
     description = project.description
     apiVersion = "1.19"
