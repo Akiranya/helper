@@ -92,7 +92,7 @@ public class HelperRedis implements Redis {
                         // Attempt to unsubscribe this instance and try again.
                         new RuntimeException("Error subscribing to listener", e).printStackTrace();
                         try {
-                            HelperRedis.this.listener.unsubscribe();
+                            HelperRedis.this.listener.unsubscribe0();
                         } catch (Exception ignored) {
 
                         }
@@ -117,7 +117,7 @@ public class HelperRedis implements Redis {
             }
 
             for (String channel : this.channels) {
-                listener.subscribe(channel.getBytes(StandardCharsets.UTF_8));
+                listener.subscribe0(channel.getBytes(StandardCharsets.UTF_8));
             }
 
         }, 2L, 2L).bindWith(this.registry);
@@ -131,12 +131,12 @@ public class HelperRedis implements Redis {
                 channel -> {
                     Log.info("[helper-redis] Subscribing to channel: " + channel);
                     this.channels.add(channel);
-                    this.listener.subscribe(channel.getBytes(StandardCharsets.UTF_8));
+                    this.listener.subscribe0(channel.getBytes(StandardCharsets.UTF_8));
                 },
                 channel -> {
                     Log.info("[helper-redis] Unsubscribing from channel: " + channel);
                     this.channels.remove(channel);
-                    this.listener.unsubscribe(channel.getBytes(StandardCharsets.UTF_8));
+                    this.listener.unsubscribe0(channel.getBytes(StandardCharsets.UTF_8));
                 }
         );
     }
@@ -157,7 +157,7 @@ public class HelperRedis implements Redis {
     @Override
     public void close() throws Exception {
         if (this.listener != null) {
-            this.listener.unsubscribe();
+            this.listener.unsubscribe0();
             this.listener = null;
         }
 
@@ -178,8 +178,7 @@ public class HelperRedis implements Redis {
         private final ReentrantLock lock = new ReentrantLock();
         private final Set<String> subscribed = ConcurrentHashMap.newKeySet();
 
-        @Override
-        public void subscribe(byte[]... channels) {
+        public void subscribe0(byte[]... channels) {
             this.lock.lock();
             try {
                 for (byte[] channel : channels) {
@@ -193,8 +192,7 @@ public class HelperRedis implements Redis {
             }
         }
 
-        @Override
-        public void unsubscribe(byte[]... channels) {
+        public void unsubscribe0(byte[]... channels) {
             this.lock.lock();
             try {
                 super.unsubscribe(channels);

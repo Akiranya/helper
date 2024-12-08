@@ -55,7 +55,7 @@ class KHelperRedis(
         redisScope.cancel()
 
         if (listener != null) {
-            listener!!.unsubscribe()
+            listener!!.unsubscribe0()
             listener = null
         }
 
@@ -101,7 +101,7 @@ class KHelperRedis(
                     } catch (e: Exception) {
                         // Attempt to unsubscribe this instance and try again.
                         RuntimeException("Error subscribing to listener", e).printStackTrace()
-                        runCatching { listener!!.unsubscribe() }
+                        runCatching { listener!!.unsubscribe0() }
                         listener = null
                         broken = true
                     }
@@ -121,7 +121,7 @@ class KHelperRedis(
                     return@launch
                 }
                 for (channel in channels) {
-                    listener.subscribe(channel.toByteArray(StandardCharsets.UTF_8))
+                    listener.subscribe0(channel.toByteArray(StandardCharsets.UTF_8))
                 }
 
                 delay(100L)
@@ -136,13 +136,13 @@ class KHelperRedis(
             notifySub = { channel ->
                 Log.info("[helper-redis] [kotlin] Subscribing to channel: $channel")
                 channels.add(channel)
-                listener!!.subscribe(channel.toByteArray(StandardCharsets.UTF_8))
+                listener!!.subscribe0(channel.toByteArray(StandardCharsets.UTF_8))
             },
 
             notifyUnsub = { channel ->
                 Log.info("[helper-redis] [kotlin] Unsubscribing from channel: $channel")
                 channels.remove(channel)
-                listener!!.unsubscribe(channel.toByteArray(StandardCharsets.UTF_8))
+                listener!!.unsubscribe0(channel.toByteArray(StandardCharsets.UTF_8))
             }
         )
     }
@@ -151,7 +151,7 @@ class KHelperRedis(
         private val lock = ReentrantLock()
         private val subscribed: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
-        override fun subscribe(vararg channels: ByteArray) {
+        fun subscribe0(vararg channels: ByteArray) {
             lock.withLock {
                 for (channel in channels) {
                     val channelName = channel.toString(StandardCharsets.UTF_8)
@@ -162,7 +162,7 @@ class KHelperRedis(
             }
         }
 
-        override fun unsubscribe(vararg channels: ByteArray) {
+        fun unsubscribe0(vararg channels: ByteArray) {
             lock.withLock {
                 super.unsubscribe(*channels)
             }

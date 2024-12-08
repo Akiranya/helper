@@ -6,7 +6,7 @@ plugins {
     alias(local.plugins.pluginyml.paper)
 }
 
-version = "1.2.1"
+version = "1.2.2"
 description = "Provides Redis clients and implements the helper Messaging system using Jedis."
 
 dependencies {
